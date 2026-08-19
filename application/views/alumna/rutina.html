@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/temaValk.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap-icons.css" rel="stylesheet" type="text/css">
+    <title>Rutina del día</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-dark bg-body-tertiary" data-bs-theme="dark">
+
+        <div class="container-fluid">
+
+            <a class="navbar-brand ms-2" href="panelAlumna.html">
+
+                <img src="../static/arrow_back_ios_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="">
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">
+                            Inicio
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="./horarios.html">
+                            Horarios
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="./gestionUsers.html">
+                            Alumnas
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="./gestionUsers.html">
+                            Profesores
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Cerrar Sesión
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </nav>
+    <main class="mobile-wrapper">
+
+        <!-- Header -->
+        <div class="d-flex justify-content-center mb-4">
+
+            <h5 class="text-white mb-0 text-center">
+                Rutina - Lunes
+            </h5>
+        </div>
+
+        <!-- Warmup -->
+        <div class="schedule-card mb-3">
+
+            <h5 class="text-white mb-1">
+                Calentamiento
+            </h5>
+
+            <p class="text-secondary mb-0">
+                5 min trote + movilidad
+            </p>
+
+        </div>
+
+        <!-- Exercise 1 -->
+        <div class="schedule-card mb-3">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+                    <h5 class="text-white mb-2">
+                        Sentadilla
+                    </h5>
+
+                    <p class="text-secondary mb-0">
+                        4 x 12
+                    </p>
+                </div>
+
+                <div class="text-end">
+                    <label class="form-label text-secondary mb-1">
+                        Peso (kg)
+                    </label>
+
+                    <input type="number" class="form-control custom-input text-center routine-weight-input" value="60">
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Exercise 2 -->
+        <div class="schedule-card mb-3">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+                    <h5 class="text-white mb-2">
+                        Peso muerto
+                    </h5>
+
+                    <p class="text-secondary mb-0">
+                        4 x 10
+                    </p>
+                </div>
+
+                <div class="text-end">
+                    <label class="form-label text-secondary mb-1">
+                        Peso (kg)
+                    </label>
+
+                    <input type="number" class="form-control custom-input text-center routine-weight-input" value="70">
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Exercise 3 -->
+        <div class="schedule-card mb-4">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+                    <h5 class="text-white mb-2">
+                        Hip Thrust
+                    </h5>
+
+                    <p class="text-secondary mb-0">
+                        4 x 12
+                    </p>
+                </div>
+
+                <div class="text-end">
+                    <label class="form-label text-secondary mb-1">
+                        Peso (kg)
+                    </label>
+
+                    <input type="number" class="form-control custom-input text-center routine-weight-input" value="80">
+                </div>
+
+            </div>
+
+        </div>
+
+        <button class="btn btn-primary w-100">
+            Guardar progreso
+        </button>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <div class="mobile-nav">
+
+        <ul class="nav nav-tabs d-flex justify-content-between text-center m-0 w-100" role="tablist">
+
+            <li class="nav-item flex-fill p-0">
+                <a href="panelAlumna.html" class="nav-link w-100">
+                    <i class="bi bi-house-door-fill d-block mb-1"></i>
+                    <small>Inicio</small>
+                </a>
+            </li>
+
+            <li class="nav-item flex-fill p-0">
+                <a href="panelAlumna.html" class="nav-link w-100">
+                    <i class="bi bi-calendar-event d-block mb-1"></i>
+                    <small>Agenda</small>
+                </a>
+            </li>
+
+            <li class="nav-item flex-fill p-0">
+                <a href="panelAlumna.html" class="nav-link active w-100">
+                    <i class="bi bi-grid d-block mb-1"></i>
+                    <small>Clases</small>
+                </a>
+            </li>
+
+            <li class="nav-item flex-fill p-0">
+                <a href="panelAlumna.html" class="nav-link w-100">
+                    <i class="bi bi-person d-block mb-1"></i>
+                    <small>Perfil</small>
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <script src="../js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

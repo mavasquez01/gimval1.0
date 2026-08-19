@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+    <link href="../css/temaValk.css" rel="stylesheet" type="text/css" />
+
+    <title>Detalle Alumna</title>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-dark bg-body-tertiary" data-bs-theme="dark">
+
+        <div class="container-fluid">
+
+            <a class="navbar-brand ms-2" href="gestionUsers.html">
+
+                <img src="../static/arrow_back_ios_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="">
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">
+                            Inicio
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="./horarios.html">
+                            Horarios
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="./gestionUsers.html">
+                            Alumnas
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="./gestionUsers.html">
+                            Profesores
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Cerrar Sesión
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    <main class="d-flex justify-content-center py-4 min-vh-100">
+
+        <div class="container-fluid px-4" style="max-width: 500px;">
+            <div class="row ms-3">
+                <div class="col-auto align-items-center">
+                    <img class="rounded-circle me-3 avatar-img-exp" src="../static/alumna1.jpg" alt="">
+                </div>
+                <div class="col align-items-center mt-3">
+                    <div class="row">
+                        <h4 class="text-white mb-1">Almendra Gonzalez</h4>
+                    </div>
+                    <div class="row">
+                        <p class="text-white mb-1"> Rut: 10.567.889-5</p>
+                    </div>
+                    <div class="row">
+                        <p class="text-white mb-1"> almegonza@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3 ms-3">
+                <div class="col">
+                    <p class="text-white">Vence el 30/06/2026</p>
+                    <p class="text-white">5 Clases restantes</p>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body plan-card">
+                            <div class="row align-items-center justify-content-center p-3">
+                                <div class="col-auto">
+                                    <h5 class="text-white">
+                                        Congelar plan por licencias médicas
+                                    </h5>
+                                    <form>
+                                        <div class="mb-4">
+
+                                            <label class="form-label text-white">
+                                                Dias a extender
+                                            </label>
+
+                                            <input type="number" class="form-control custom-input" value="1">
+
+                                        </div>
+                                        <button type="submit" class="btn btn-primary py-3 rounded-4 fw-bold">
+                                            EXTENDER
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="../js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
