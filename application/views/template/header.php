@@ -8,8 +8,9 @@
 
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="css/temaValk.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap.min.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/custom.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/bootstrap/css/bootstrap.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/bootstrap/css/bootstrap-icons.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/bootstrap/css/temaValk.css') ?>">
 </head>
 
 <body class="landing-page">
