@@ -8,9 +8,9 @@
 
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="css/temaValk.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="<?= base_url('assets/bootstrap/css/bootstrap.min.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/bootstrap/css/bootstrap-icons.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/bootstrap/css/temaValk.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/bootstrap.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/bootstrap-icons.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/temaValk.css') ?>">
 </head>
 
 <body class="landing-page">
@@ -18,7 +18,7 @@
     <nav class="navbar navbar-expand-lg bg-dark sticky-top" data-bs-theme="dark">
         <div class="container">
             <a class="navbar-brand p-0" href="index.html">
-                <img src="static/logoval.png" class="landing-logo" alt="Logo Valkiria Center">
+                <img src="<?= base_url('/assets/images/logoval.png')?>" class="landing-logo" alt="Logo Valkiria Center">
             </a>
 
             <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
