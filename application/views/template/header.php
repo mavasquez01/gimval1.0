@@ -5,11 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valkiria Center</title>
-
-    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="css/temaValk.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/bootstrap.min.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/bootstrap-icons.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap_icons/bootstrap-icons.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/temaValk.css') ?>">
 </head>
 

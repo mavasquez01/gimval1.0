@@ -12,11 +12,11 @@
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <div class="hero-slide">
-                            <img src="static/cr1.jpg" class="d-block w-100" alt="Entrenamiento Valkiria Center">
+                            <img src="<?= base_url('/assets/images/cr1.jpg') ?>" class="d-block w-100" alt="Entrenamiento Valkiria Center">
                             <div class="hero-overlay"></div>
                             <div class="hero-content">
                                 <div class="container">
-                                    <h1 class="hero-title text-white mb-3">
+                                    <h1 class="hero-title text-white mb-3 d-1">
                                         Fuerza.<br>
                                         Disciplina.<br>
                                         Empoderamiento.
@@ -34,7 +34,7 @@
 
                     <div class="carousel-item">
                         <div class="hero-slide">
-                            <img src="static/cr2.jpg" class="d-block w-100" alt="Entrenamiento funcional">
+                            <img src="<?= base_url('/assets/images/cr2.jpg') ?>" class="d-block w-100" alt="Entrenamiento funcional">
                             <div class="hero-overlay"></div>
                             <div class="hero-content">
                                 <div class="container">
@@ -55,7 +55,7 @@
 
                     <div class="carousel-item">
                         <div class="hero-slide">
-                            <img src="static/cr3.jpg" class="d-block w-100" alt="Comunidad Valkiria Center">
+                            <img src="<?= base_url('/assets/images/cr3.jpg') ?>" class="d-block w-100" alt="Comunidad Valkiria Center">
                             <div class="hero-overlay"></div>
                             <div class="hero-content">
                                 <div class="container">
@@ -147,13 +147,13 @@
 
                 <div class="row g-3 g-md-4">
                     <div class="col-12 col-md-4 reveal-left">
-                        <img src="static/nuestroEspacio1.jpg" class="space-img" alt="Espacio de entrenamiento Valkiria">
+                        <img src="<?= base_url('/assets/images/nuestroEspacio1.jpg') ?>" class="space-img" alt="Espacio de entrenamiento Valkiria">
                     </div>
                     <div class="col-12 col-md-4 reveal">
-                        <img src="static/nuestroEspacio2.jpg" class="space-img" alt="Sala de entrenamiento Valkiria">
+                        <img src="<?= base_url('/assets/images/nuestroEspacio2.jpg') ?>" class="space-img" alt="Sala de entrenamiento Valkiria">
                     </div>
                     <div class="col-12 col-md-4 reveal-right">
-                        <img src="static/nuestroEspacio3.jpg" class="space-img" alt="Equipamiento Valkiria">
+                        <img src="<?= base_url('/assets/images/nuestroEspacio3.jpg') ?>" class="space-img" alt="Equipamiento Valkiria">
                     </div>
                 </div>
             </div>
@@ -170,7 +170,7 @@
                 <div class="row g-4">
                     <div class="col-12 col-lg-6 reveal-left">
                         <div class="soft-card">
-                            <img src="static/plan1.jpg" class="plan-img" alt="Plan personalizado">
+                            <img src="<?= base_url('/assets/images/plan1.jpg') ?>" class="plan-img" alt="Plan personalizado">
                             <div class="card-body p-4">
                                 <h4 class="fw-bold text-white">Plan Personalizado</h4>
                                 <p class="plan-price">Desde $68.000</p>
@@ -188,7 +188,7 @@
 
                     <div class="col-12 col-lg-6 reveal-right">
                         <div class="soft-card">
-                            <img src="static/plan3.jpg" class="plan-img" alt="Plan personalizado dúo">
+                            <img src="<?= base_url('/assets/images/plan3.jpg') ?>" class="plan-img" alt="Plan personalizado dúo">
                             <div class="card-body p-4">
                                 <h4 class="fw-bold text-white">Plan Personalizado Dúo</h4>
                                 <p class="plan-price">Desde 2 x $121.040</p>
@@ -206,7 +206,7 @@
 
                     <div class="col-12 col-lg-6 reveal-left">
                         <div class="soft-card">
-                            <img src="static/plan4.jpg" class="plan-img" alt="Plan grupal estudiante">
+                            <img src="<?= base_url('/assets/images/plan4.jpg') ?>" class="plan-img" alt="Plan grupal estudiante">
                             <div class="card-body p-4">
                                 <h4 class="fw-bold text-white">Plan Grupal Estudiante</h4>
                                 <p class="plan-price">Desde $35.000</p>
@@ -224,7 +224,7 @@
 
                     <div class="col-12 col-lg-6 reveal-right">
                         <div class="soft-card">
-                            <img src="static/plan2.jpg" class="plan-img" alt="Plan grupal">
+                            <img src="<?= base_url('/assets/images/plan2.jpg') ?>" class="plan-img" alt="Plan grupal">
                             <div class="card-body p-4">
                                 <h4 class="fw-bold text-white">Plan Grupal</h4>
                                 <p class="plan-price">Desde $33.000</p>
@@ -255,7 +255,7 @@
                 <div class="row g-4">
                     <div class="col-12 col-md-4 reveal delay-1">
                         <div class="testimonial-box text-center">
-                            <img src="static/user.webp" class="rounded-circle testimonial-avatar mb-3" alt="Camila R.">
+                            <img src="<?= base_url('/assets/images/user.webp') ?>" class="rounded-circle testimonial-avatar mb-3" alt="Camila R.">
                             <h5 class="fw-bold text-white">Camila R.</h5>
                             <div class="text-warning fs-5 mb-3">⭐⭐⭐⭐⭐</div>
                             <p class="text-secondary fst-italic mb-0">
@@ -265,7 +265,7 @@
                     </div>
                     <div class="col-12 col-md-4 reveal delay-2">
                         <div class="testimonial-box text-center">
-                            <img src="static/user.webp" class="rounded-circle testimonial-avatar mb-3" alt="Valentina M.">
+                            <img src="<?= base_url('/assets/images/user.webp') ?>" class="rounded-circle testimonial-avatar mb-3" alt="Valentina M.">
                             <h5 class="fw-bold text-white">Valentina M.</h5>
                             <div class="text-warning fs-5 mb-3">⭐⭐⭐⭐⭐</div>
                             <p class="text-secondary fst-italic mb-0">
@@ -275,7 +275,7 @@
                     </div>
                     <div class="col-12 col-md-4 reveal delay-3">
                         <div class="testimonial-box text-center">
-                            <img src="static/user.webp" class="rounded-circle testimonial-avatar mb-3" alt="Fernanda P.">
+                            <img src="<?= base_url('/assets/images/user.webp') ?>" class="rounded-circle testimonial-avatar mb-3" alt="Fernanda P.">
                             <h5 class="fw-bold text-white">Fernanda P.</h5>
                             <div class="text-warning fs-5 mb-3">⭐⭐⭐⭐⭐</div>
                             <p class="text-secondary fst-italic mb-0">
@@ -302,17 +302,17 @@
                             </div>
 
                             <div class="d-flex align-items-center gap-3 mb-3">
-                                <img src="static/ubicacion.png" class="contact-icon" alt="Ubicación">
+                                <img src="<?= base_url('/assets/images/ubicacion.png') ?>" class="contact-icon" alt="Ubicación">
                                 <div class="fw-semibold text-white">Manuel Rodríguez 1476, Linares</div>
                             </div>
 
                             <div class="d-flex align-items-center gap-3 mb-3">
-                                <img src="static/telefono.png" class="contact-icon" alt="Teléfono">
+                                <img src="<?= base_url('/assets/images/telefono.png') ?>" class="contact-icon" alt="Teléfono">
                                 <div class="fw-semibold text-white">+56 9 7132 XXXX</div>
                             </div>
 
                             <div class="d-flex align-items-center gap-3 mb-4">
-                                <img src="static/correo.png" class="contact-icon" alt="Correo">
+                                <img src="<?= base_url('/assets/images/correo.png') ?>" class="contact-icon" alt="Correo">
                                 <div class="fw-semibold text-white">contacto@valkyriacenter.cl</div>
                             </div>
 
