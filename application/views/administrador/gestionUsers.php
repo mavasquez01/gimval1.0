@@ -1,45 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="../css/temaValk.css" rel="stylesheet" type="text/css" />
-    <link href="../css/bootstrap-icons.css" rel="stylesheet" type="text/css" />
-    <title>Document</title>
-</head>
-
-<body>
-    <div class="container-fluid mt-2">
-
-        <div class="position-relative d-flex align-items-center justify-content-center">
-
-            <a href="panelAdmin.html" class="position-absolute start-0 ms-2 text-white text-decoration-none">
-                <i class="bi bi-chevron-left fs-3"></i>
-            </a>
-
-            <ul class="nav nav-tabs justify-content-center" id="tabs-admin" role="tablist">
-
-                <li class="nav-item me-3 ms-5" role="presentation">
-                    <button class="nav-link active" id="alumnas-tab" data-bs-toggle="tab"
-                        data-bs-target="#alumnas-tab-pane" type="button">
-                        Alumnas
-                    </button>
-                </li>
-
-                <li class="nav-item mx-3" role="presentation">
-                    <button class="nav-link" id="profesores-tab" data-bs-toggle="tab"
-                        data-bs-target="#profesores-tab-pane" type="button">
-                        Profesores
-                    </button>
-                </li>
-
-            </ul>
-
-        </div>
-
-    </div>
     <main class="d-flex justify-content-center min-vh-100 px-4">
         <div class="tab-content" id="myTabContent" style="max-width: 420px;">
             <div class="tab-pane fade show active" id="alumnas-tab-pane" role="tabpanel" aria-labelledby="alumnas-tab"
@@ -649,7 +608,4 @@
 
     </main>
 
-    <script src="../js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+    
