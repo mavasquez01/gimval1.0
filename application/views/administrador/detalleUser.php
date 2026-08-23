@@ -5,7 +5,7 @@
         <div class="container-fluid px-4" style="max-width: 500px;">
             <div class="row ms-3">
                 <div class="col-auto align-items-center">
-                    <img class="rounded-circle me-3 avatar-img-exp" src="../static/alumna1.jpg" alt="">
+                    <img src="<?= base_url('/assets/images/alumna1.jpg')?>" class="rounded-circle me-3 avatar-img-exp" alt="">
                 </div>
                 <div class="col align-items-center mt-3">
                     <div class="row">

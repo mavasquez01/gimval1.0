@@ -64,7 +64,7 @@
                 <!-- Monday -->
                 <div class="tab-pane fade show active" id="lunes-pane" role="tabpanel">
 
-                    <a href="editarBloque.html" class="text-decoration-none">
+                    <a href="<?=base_url('index.php/administrador/editarBloque')?>" class="text-decoration-none">
 
                         <div class="schedule-card mb-3 clickable-card">
 
@@ -101,7 +101,7 @@
                         </div>
 
                     </a>
-                    <a href="editarBloque.html" class="text-decoration-none">
+                    <a href="<?=base_url('index.php/administrador/editarBloque')?>" class="text-decoration-none">
 
                         <div class="schedule-card mb-3 clickable-card">
 
@@ -138,7 +138,7 @@
                         </div>
 
                     </a>
-                    <a href="editarBloque.html" class="text-decoration-none">
+                    <a href="<?=base_url('index.php/administrador/editarBloque')?>" class="text-decoration-none">
 
                         <div class="schedule-card mb-3 clickable-card">
 
@@ -181,7 +181,7 @@
                 <!-- Tuesday -->
                 <div class="tab-pane fade" id="martes-pane" role="tabpanel">
 
-                    <a href="editarBloque.html" class="text-decoration-none">
+                    <a href="<?=base_url('index.php/administrador/editarBloque')?>" class="text-decoration-none">
 
                         <div class="schedule-card mb-3 clickable-card">
 
@@ -223,7 +223,7 @@
                 <!-- Wednesday -->
                 <div class="tab-pane fade" id="miercoles-pane" role="tabpanel">
 
-                    <a href="editarBloque.html" class="text-decoration-none">
+                    <a href="<?=base_url('index.php/administrador/editarBloque')?>" class="text-decoration-none">
 
                         <div class="schedule-card mb-3 clickable-card">
 

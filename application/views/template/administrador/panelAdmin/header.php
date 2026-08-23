@@ -15,7 +15,7 @@
     <nav class="navbar navbar-expand-lg bg-dark bg-body-tertiary" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="../index.html">
-                <img src="../static/logoval.png" alt="Logo Valkiria" style="height: 60px;">
+                <img src="<?= base_url('/assets/images/logoval.png')?>" class="landing-logo" alt="Logo Valkiria Center">
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -27,19 +27,19 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" href="panelAdmin.html">Inicio</a>
+                        <a class="nav-link active" href="<?=base_url('index.php/administrador')?>">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="horarios.html">Horarios</a>
+                        <a class="nav-link" href="<?=base_url('index.php/administrador/horarios')?>">Horarios</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="gestionUsers.html">Alumnas</a>
+                        <a class="nav-link" href="<?=base_url('index.php/administrador/gestionUsers')?>">Alumnas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="gestionUsers.html">Profesores</a>
+                        <a class="nav-link" href="<?=base_url('index.php/administrador/gestionUsers')?>">Profesores</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../index.html">Cerrar Sesión</a>
+                        <a class="nav-link" href="<?=base_url('index.php')?>">Cerrar Sesión</a>
                     </li>
                 </ul>
             </div>

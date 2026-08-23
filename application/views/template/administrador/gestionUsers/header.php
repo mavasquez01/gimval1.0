@@ -15,7 +15,7 @@
 
         <div class="position-relative d-flex align-items-center justify-content-center">
 
-            <a href="panelAdmin.html" class="position-absolute start-0 ms-2 text-white text-decoration-none">
+            <a href="<?=base_url('index.php/administrador')?>" class="position-absolute start-0 ms-2 text-white text-decoration-none">
                 <i class="bi bi-chevron-left fs-3"></i>
             </a>
 

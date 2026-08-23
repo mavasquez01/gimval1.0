@@ -35,7 +35,7 @@
                             <tbody>
                                 <tr>
                                     <td class="w-100 m-1">
-                                        <a href="detalleUser.html" class="text-decoration-none">
+                                        <a href="<?=base_url('index.php/administrador/detalleUser')?>" class="text-decoration-none">
                                             <div class="card">
                                                 <div class="card-body">
                                                     <div class="row align-items-center justify-content-between">
@@ -79,7 +79,7 @@
                                 <tr>
                                     <td class="w-100 m-1">
 
-                                        <a href="detalleUser.html" class="text-decoration-none">
+                                        <a href="<?=base_url('index.php/administrador/detalleUser')?>" class="text-decoration-none">
 
                                             <div class="card">
                                                 <div class="card-body">
@@ -127,7 +127,7 @@
                                 <tr>
                                     <td class="w-100 m-1">
 
-                                        <a href="detalleUser.html" class="text-decoration-none">
+                                        <a href="<?=base_url('index.php/administrador/detalleUser')?>" class="text-decoration-none">
 
                                             <div class="card">
                                                 <div class="card-body">
@@ -175,7 +175,7 @@
                                 <tr>
                                     <td class="w-100 m-1">
 
-                                        <a href="detalleUser.html" class="text-decoration-none">
+                                        <a href="<?=base_url('index.php/administrador/detalleUser')?>" class="text-decoration-none">
 
                                             <div class="card">
                                                 <div class="card-body">
@@ -220,7 +220,7 @@
                                 <tr>
                                     <td class="w-100 m-1">
 
-                                        <a href="detalleUser.html" class="text-decoration-none">
+                                        <a href="<?=base_url('index.php/administrador/detalleUser')?>" class="text-decoration-none">
 
                                             <div class="card">
                                                 <div class="card-body">

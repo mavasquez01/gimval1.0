@@ -21,7 +21,7 @@
         <div class="container-fluid">
 
             <a class="navbar-brand ms-2"
-                href="horarios.html">
+                href="<?=base_url('index.php/administrador/horarios')?>">
 
                 <i class="bi bi-chevron-left fs-4"></i>
             </a>
@@ -41,35 +41,35 @@
 
                     <li class="nav-item">
                         <a class="nav-link"
-                            href="../index.html">
+                            href="<?=base_url('index.php/administrador')?>">
                             Inicio
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link active"
-                            href="./horarios.html">
+                            href="<?=base_url('index.php/administrador/horarios')?>">
                             Horarios
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link"
-                            href="./gestionUsers.html">
+                            href="<?=base_url('index.php/administrador/gestionUsers')?>">
                             Alumnas
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link"
-                            href="./gestionUsers.html">
+                            href="<?=base_url('index.php/administrador/gestionUsers')?>">
                             Profesores
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link"
-                            href="#">
+                            href="<?=base_url('index.php')?>">
                             Cerrar Sesión
                         </a>
                     </li>

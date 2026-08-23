@@ -17,10 +17,9 @@
     <nav class="navbar navbar-expand-lg bg-dark bg-body-tertiary" data-bs-theme="dark">
 
         <div class="container-fluid">
-
-            <a class="navbar-brand ms-2" href="gestionUsers.html">
-
-                <img src="../static/arrow_back_ios_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="">
+            <a class="navbar-brand ms-2" href="<?=base_url('index.php/administrador/gestionUsers')?>">
+                <img src="<?= base_url('/assets/images/arrow_back_ios_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png')?>" alt="">
+                
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -34,31 +33,31 @@
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 
                     <li class="nav-item">
-                        <a class="nav-link" href="../index.html">
+                        <a class="nav-link active" href="<?=base_url('index.php/administrador')?>">
                             Inicio
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link active" href="./horarios.html">
+                        <a class="nav-link" href="<?=base_url('index.php/administrador/horarios')?>">
                             Horarios
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="./gestionUsers.html">
+                        <a class="nav-link" href="<?=base_url('index.php/administrador/gestionUsers')?>">
                             Alumnas
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="./gestionUsers.html">
+                        <a class="nav-link" href="<?=base_url('index.php/administrador/gestionUsers')?>">
                             Profesores
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="<?=base_url('index.php')?>">
                             Cerrar Sesión
                         </a>
                     </li>
