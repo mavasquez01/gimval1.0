@@ -1,14 +1,4 @@
-<!DOCTYPE html>
 
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-        <link href="../css/temaValk.css" rel="stylesheet" type="text/css"/>
-        <title>Completar perfil</title>
-    </head>
-    <body>
         <section class="vh-100 gradient-custom">
             <div class="container py-5 h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
@@ -19,7 +9,7 @@
                                 <div class="mb-md-5 mt-md-4 pb-5">
 
                                     <div>
-                                        <img src="../static/logoval.png" width="150" alt="alt"/>
+                                        <img src="<?=base_url('/assets/images/logoval.png')?>" width="150" alt="alt"/>
                                         <h3 class="fw-bold mb-2 text-uppercase">Nueva contraseña</h3>
                                         <p class="text-white-50 mb-5">Ingresa tu nueva contraseña</p>
                                     </div>
@@ -52,6 +42,4 @@
             </div>
         </section>
 
-        <script src="../js/bootstrap.bundle.min.js"></script>
-    </body>
-</html>
+        
