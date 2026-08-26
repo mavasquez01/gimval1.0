@@ -12,18 +12,18 @@
                                         <img src="<?=base_url('/assets/images/logoval.png')?>" width="150" alt="alt"/>
                                     </div>
 
-                                    <form id="formularioInicioSesion">
+                                    <form id="formularioInicioSesion" action="<?= site_url('autenticacion/iniciarSesion')?>" method="POST">
 
                                         <div data-mdb-input-init class="form-outline form-white mb-4">
-                                            <label class="form-label text-start d-block" for="rut">RUT</label>
-                                            <input type="text" id="rut"
+                                            <label class="form-label text-start d-block" for="correo">Correo</label>
+                                            <input type="email" id="correo" name="correo"
                                                    class="form-control form-control-lg"
                                                    data-bs-theme="dark"
-                                                   placeholder="Ej: 12.345.678-9">
+                                                   placeholder="Ej: usuario@gmail.com">
                                         </div>
                                         <div data-mdb-input-init class="form-outline form-white mb-4">
                                             <label class="form-label text-start d-block" for="contrasena">Contraseña</label>
-                                            <input type="password" id="contrasena"
+                                            <input type="password" id="contrasena" name="contrasena"
                                                    class="form-control form-control-lg"
                                                    data-bs-theme="dark"
                                                    placeholder="Ingresa tu contraseña">

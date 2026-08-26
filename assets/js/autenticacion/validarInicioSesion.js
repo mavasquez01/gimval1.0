@@ -1,12 +1,12 @@
-document.addEventListener("DOMContentLoaded", function () {
+/*document.addEventListener("DOMContentLoaded", function () {
     const formularioInicioSesion = document.getElementById("formularioInicioSesion");
-    const inputRut = document.getElementById("rut");
+    const inputCorreo = document.getElementById("correo");
     const inputContrasena = document.getElementById("contrasena");
 
     formularioInicioSesion.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        const rut = inputRut.value.trim();
+        const correo = inputCorreo.value.trim();
         const pass = inputContrasena.value.trim();
 
         let pagina = "";
@@ -31,4 +31,4 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("RUT o contraseña incorrectos");
         }
     });
-});
+});*/

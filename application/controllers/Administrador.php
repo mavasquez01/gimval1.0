@@ -1,9 +1,23 @@
-
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Administrador extends CI_Controller {
+class Administrador extends CI_Controller
+{
+
+    public function __construct()
+    {
+        parent::__construct();
+        //true: login obligatorio 
+        //false: para acceder sin login
+        $protegerRutas = false;
+
+        if ($protegerRutas) {
+            if (!$this->session->userdata('logueado')) {
+                redirect('autenticacion');
+            }
+        }
+    }
     public function index()
     {
 
