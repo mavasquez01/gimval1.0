@@ -43,6 +43,10 @@ class Autenticacion extends CI_Controller
         $this->load->view('template/autenticacion/recuperarContrasenia/footer');
     }
 
+    public function generarHash()
+    {
+        echo password_hash('123456', PASSWORD_DEFAULT);
+    }
     public function iniciarSesion()
     {
         // Reglas de validación
@@ -58,27 +62,73 @@ class Autenticacion extends CI_Controller
             'required'
         );
 
+        // Si los datos enviados no cumplen las validaciones
         if ($this->form_validation->run() == FALSE) {
-            echo validation_errors();
+
+            $this->session->set_flashdata(
+                'alerta_login',
+                [
+                    'icon' => 'warning',
+                    'title' => 'Datos inválidos',
+                    'text' => 'Debes ingresar correctamente tu correo y contraseña.'
+                ]
+            );
+
+            redirect('autenticacion');
             return;
         }
 
+        // Recibimos los datos enviados por POST
         $correo = $this->input->post('correo');
         $contrasena = $this->input->post('contrasena');
 
+        // Buscamos al usuario en la base de datos
         $usuario = $this->Autenticacion_model->buscarPorCorreo($correo);
 
+        // Verificamos que el usuario exista
         if ($usuario) {
+
+            // Verificamos la contraseña ingresada contra el hash de la BD
             if (password_verify($contrasena, $usuario->contraseña)) {
 
-                redirect('administrador');
+                $this->session->set_userdata([
+                    'rut' => $usuario->rut,
+                    'nombre' => $usuario->nombre,
+                    'apellido' => $usuario->apellido,
+                    'edad' => $usuario->edad,
+                    'correo' => $usuario->correo,
+                    'rol' => $usuario->rol,
+                    'logueado' => TRUE
+                ]);
+
+                redirect('alumna');
 
             } else {
 
-                echo "Contraseña incorrecta";
+                $this->session->set_flashdata(
+                    'alerta_login',
+                    [
+                        'icon' => 'error',
+                        'title' => 'Inicio de sesión incorrecto',
+                        'text' => 'Correo o contraseña incorrectos.'
+                    ]
+                );
+
+                redirect('autenticacion');
             }
+
         } else {
-            echo "Usuario no encontrado";
+
+            $this->session->set_flashdata(
+                'alerta_login',
+                [
+                    'icon' => 'error',
+                    'title' => 'Inicio de sesión incorrecto',
+                    'text' => 'Correo o contraseña incorrectos.'
+                ]
+            );
+
+            redirect('autenticacion');
         }
     }
 }

@@ -32,7 +32,7 @@
                     <li class="nav-item"><a class="nav-link" href="#nuestroEspacio">Nuestro Espacio</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
                     <li class="nav-item ms-lg-3">
-                        <a class="btn btn-outline-primary btn-auto rounded-pill px-4" href="autenticacion/iniciarSesion.html">
+                        <a class="btn btn-outline-primary btn-auto rounded-pill px-4" href="<?= base_url('index.php/autenticacion')?>">
                             Iniciar Sesión
                         </a>
                     </li>

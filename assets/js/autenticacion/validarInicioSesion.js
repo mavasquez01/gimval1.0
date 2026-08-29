@@ -1,34 +1,77 @@
-/*document.addEventListener("DOMContentLoaded", function () {
-    const formularioInicioSesion = document.getElementById("formularioInicioSesion");
+document.addEventListener("DOMContentLoaded", function () {
+    const mensajeLogin = document.getElementById("mensajeLogin");
+    // Correo o contraseña incorrecta
+    if (mensajeLogin) {
+
+    const icon = mensajeLogin.dataset.icon;
+    const title = mensajeLogin.dataset.title;
+    const text = mensajeLogin.dataset.text;
+
+    if (title !== "") {
+
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: text
+        });
+
+    }
+}
+
+    const formulario = document.getElementById("formularioInicioSesion");
     const inputCorreo = document.getElementById("correo");
     const inputContrasena = document.getElementById("contrasena");
 
-    formularioInicioSesion.addEventListener("submit", function (event) {
-        event.preventDefault();
+    const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const regexContrasena = /^.{6,}$/;
+
+    formulario.addEventListener("submit", function (event) {
 
         const correo = inputCorreo.value.trim();
-        const pass = inputContrasena.value.trim();
+        const contrasena = inputContrasena.value;
 
-        let pagina = "";
-        let rol = "";
+        // Validar campos vacíos
+        if (correo === "" || contrasena === "") {
 
-        if (rut === "1234-5" && pass === "12345") {
-            rol = "Administrador";
-            pagina = "../administrador/panelAdmin.html";
+            event.preventDefault();
 
-        } else if (rut === "12345-6" && pass === "12345") {
-            rol = "Alumno";
-            pagina = "../alumna/panelAlumna.html"; 
+            Swal.fire({
+                icon: "warning",
+                title: "Campos incompletos",
+                text: "Debes ingresar tu correo y contraseña."
+            });
 
-        } else if (rut === "123456-7" && pass === "12345") {
-            rol = "Profesor";
-            pagina = "../profesor/panelProfesor_integrado.html";
+            return;
         }
 
-        if (rol !== "" && pagina !== "") {
-            window.location.href = pagina;
-        } else {
-            alert("RUT o contraseña incorrectos");
+        // Validar formato del correo
+        if (!regexCorreo.test(correo)) {
+
+            event.preventDefault();
+
+            Swal.fire({
+                icon: "error",
+                title: "Correo inválido",
+                text: "Ingresa un correo electrónico válido."
+            });
+
+            return;
         }
+
+        // Validar contraseña
+        if (!regexContrasena.test(contrasena)) {
+
+            event.preventDefault();
+
+            Swal.fire({
+                icon: "error",
+                title: "Contraseña inválida",
+                text: "La contraseña debe tener al menos 6 caracteres."
+            });
+
+            return;
+        }
+
     });
-});*/
+
+});
