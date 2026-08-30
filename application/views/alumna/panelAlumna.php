@@ -745,17 +745,20 @@
                     <img src="../static/alumna1.jpg" alt="Foto de perfil" class="profile-avatar me-3">
 
                     <div>
-                        <h5 class="text-white mb-1">
-                            María González
-                        </h5>
 
-                        <p class="text-secondary mb-0">
-                            RUT: 12.345.678-9
-                        </p>
+                        <?php if ($perfil): ?>
 
-                        <p class="text-secondary mb-0">
-                            maria@gym.com
-                        </p>
+                            <h5 class="text-white mb-1">
+                                <?= html_escape($perfil->nombre) ?>
+                                <?= html_escape($perfil->apellido) ?>
+                            </h5>
+
+                            <p class="text-secondary mb-0">
+                                <?= html_escape($perfil->correo) ?>
+                            </p>
+
+                        <?php endif; ?>
+
                     </div>
 
                 </div>
@@ -781,7 +784,7 @@
                 </div>
 
                 <div class="schedule-card mb-2">
-                    <a href="modificarDatos.html" class="d-flex align-items-center text-white">
+                    <a href="<?= site_url('alumna/modificarDatos') ?>" class="d-flex align-items-center text-white">
                         <i class="bi bi-person me-3 text-pink"></i>
                         Modificar mis datos
                     </a>
@@ -801,7 +804,7 @@
                 </div>
 
                 <div class="schedule-card">
-                    <a href="<?=site_url('alumna/cerrarSesion')?>" class="d-flex align-items-center text-pink">
+                    <a href="<?= site_url('alumna/cerrarSesion') ?>" class="d-flex align-items-center text-pink">
                         <i class="bi bi-box-arrow-right me-3"></i>
                         Cerrar sesión
                     </a>

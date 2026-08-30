@@ -8,9 +8,13 @@ class Alumna extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+
+        // Cargamos el modelo de autenticación
+        $this->load->model('Autenticacion_model');
+
         //true: login obligatorio 
         //false: para acceder sin login
-        $protegerRutas = true;
+        $protegerRutas = false;
 
         if ($protegerRutas) {
             if (!$this->session->userdata('logueado')) {
@@ -20,9 +24,12 @@ class Alumna extends CI_Controller
     }
     public function index()
     {
+        $correo = $this->session->userdata('correo');
+
+        $data['perfil'] = $this->Autenticacion_model->buscarPorCorreo($correo);
 
         $this->load->view('template/alumna/panelAlumna/header');
-        $this->load->view('alumna/panelAlumna');
+        $this->load->view('alumna/panelAlumna', $data);
         $this->load->view('template/alumna/panelAlumna/footer');
     }
 
@@ -37,8 +44,14 @@ class Alumna extends CI_Controller
     public function modificarDatos()
     {
 
+        // Obtenemos el correo de la sesión
+        $correo = $this->session->userdata('correo');
+
+        // Buscamos los datos reales del usuario
+        $data['perfil'] = $this->Autenticacion_model->buscarPorCorreo($correo);
+
         $this->load->view('template/alumna/modificarDatos/header');
-        $this->load->view('alumna/modificarDatos');
+        $this->load->view('alumna/modificarDatos', $data);
         $this->load->view('template/alumna/modificarDatos/footer');
     }
 
@@ -63,5 +76,5 @@ class Alumna extends CI_Controller
         $this->session->sess_destroy();
 
         redirect('autenticacion');
-    }  
+    }
 }

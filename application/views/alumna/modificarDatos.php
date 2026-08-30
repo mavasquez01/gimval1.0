@@ -21,7 +21,7 @@
                         Nombres
                     </label>
 
-                    <input type="text" id="nombres" class="form-control custom-input" value="Almendra">
+                    <input type="text" id="nombres" class="form-control custom-input" value="<?= html_escape($perfil->nombre) ?>"">
                 </div>
 
                 <div class="mb-3">
@@ -29,7 +29,7 @@
                         Apellidos
                     </label>
 
-                    <input type="text" id="apellidos" class="form-control custom-input" value="González">
+                    <input type="text" id="apellidos" class="form-control custom-input" value="<?= html_escape($perfil->apellido) ?>"">
                 </div>
 
                 <div class="mb-3">
@@ -37,7 +37,7 @@
                         Correo electrónico
                     </label>
 
-                    <input type="email" id="correo" class="form-control custom-input" value="almendra@gmail.com">
+                    <input type="email" id="correo" class="form-control custom-input" value="<?= html_escape($perfil->correo) ?>"">
                 </div>
 
                 <div class="mb-3">
@@ -45,7 +45,7 @@
                         Teléfono
                     </label>
 
-                    <input type="tel" id="telefono" class="form-control custom-input" value="+56 9 1234 5678">
+                    <input type="tel" id="telefono" class="form-control custom-input" value="#">
                 </div>
 
                 <div class="mb-4">
@@ -53,14 +53,14 @@
                         Fecha de nacimiento
                     </label>
 
-                    <input type="date" id="fechaNacimiento" class="form-control custom-input" value="1998-05-12">
+                    <input type="date" id="fechaNacimiento" class="form-control custom-input" value="#">
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 mb-3">
                     Guardar cambios
                 </button>
 
-                <a href="panelAlumna.html" class="btn btn-outline-primary w-100">
+                <a href="<?=site_url('alumna')?>" class="btn btn-outline-primary w-100">
                     Cancelar
                 </a>
 
