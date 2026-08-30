@@ -10,7 +10,7 @@ class Alumna extends CI_Controller
         parent::__construct();
         //true: login obligatorio 
         //false: para acceder sin login
-        $protegerRutas = false;
+        $protegerRutas = true;
 
         if ($protegerRutas) {
             if (!$this->session->userdata('logueado')) {
@@ -57,4 +57,11 @@ class Alumna extends CI_Controller
         $this->load->view('alumna/cambiarContraseña');
         $this->load->view('template/alumna/cambiarContraseña/footer');
     }
+
+    public function cerrarSesion()
+    {
+        $this->session->sess_destroy();
+
+        redirect('autenticacion');
+    }  
 }

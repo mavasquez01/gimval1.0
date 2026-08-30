@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const inputContrasena = document.getElementById("contrasena");
 
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const regexContrasena = /^.{6,}$/;
+    const regexContrasena = /^.{8,}$/;
 
     formulario.addEventListener("submit", function (event) {
 
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
             Swal.fire({
                 icon: "error",
                 title: "Contraseña inválida",
-                text: "La contraseña debe tener al menos 6 caracteres."
+                text: "La contraseña debe tener al menos 8 caracteres."
             });
 
             return;

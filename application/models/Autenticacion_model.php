@@ -10,4 +10,6 @@ class Autenticacion_model extends CI_Model
 
         return $query->row();
     }
+
+    
 }

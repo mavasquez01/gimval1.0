@@ -57,7 +57,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=base_url('index.php')?>">
+                        <a class="nav-link" href="<?=base_url('index.php/alumna/cerrarSesion')?>">
                             Cerrar Sesión
                         </a>
                     </li>

@@ -9,9 +9,7 @@
             <section class="mb-4">
                 <h4 class="text-white mb-1">
                     ¡Hola,
-                    <?= html_escape($this->session->userdata('nombre')) ?>
-                    <?= html_escape($this->session->userdata('apellido')) ?>!
-                    
+                    <?= html_escape($this->session->userdata('nombre')) ?>!
                 </h4>
 
                 <p class="text-secondary mb-0">
@@ -803,7 +801,7 @@
                 </div>
 
                 <div class="schedule-card">
-                    <a href="../index.html" class="d-flex align-items-center text-pink">
+                    <a href="<?=site_url('alumna/cerrarSesion')?>" class="d-flex align-items-center text-pink">
                         <i class="bi bi-box-arrow-right me-3"></i>
                         Cerrar sesión
                     </a>

@@ -45,7 +45,7 @@ class Autenticacion extends CI_Controller
 
     public function generarHash()
     {
-        echo password_hash('123456', PASSWORD_DEFAULT);
+        echo password_hash('12345678', PASSWORD_DEFAULT);
     }
     public function iniciarSesion()
     {

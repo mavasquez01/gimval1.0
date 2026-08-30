@@ -15,9 +15,8 @@
 
         <div class="container-fluid">
 
-            <a class="navbar-brand ms-2" href="panelAlumna.html">
-
-                <img src="../static/arrow_back_ios_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="">
+            <a class="navbar-brand" href="<?=base_url('index.php/alumna')?>">
+                <img src="<?= base_url('/assets/images/logoval.png')?>" alt="Logo Valkiria" style="height: 60px;">
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -31,31 +30,31 @@
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 
                     <li class="nav-item">
-                        <a class="nav-link" href="../index.html">
+                        <a class="nav-link active" href="<?=base_url('index.php/alumna')?>">
                             Inicio
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link active" href="./horarios.html">
-                            Horarios
+                        <a class="nav-link" href="<?=base_url('index.php/alumna/rutina')?>">
+                            Mis clases
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="./gestionUsers.html">
-                            Alumnas
+                        <a class="nav-link" href="<?=base_url('#agendar')?>">
+                            Agendar
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="./gestionUsers.html">
-                            Profesores
+                        <a class="nav-link" href="<?=base_url('#perfil')?>">
+                            Perfil
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="<?=base_url('index.php/alumna/cerrarSesion')?>">
                             Cerrar Sesión
                         </a>
                     </li>
