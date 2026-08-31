@@ -121,6 +121,24 @@ class Alumna extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($payload));
     }   
+    public function cancelarReserva()
+    {
+    $rut_alumna = "44444444-4"; // TODO: reemplazar por sesión real
+    $id_reserva = (int) $this->input->post('id_reserva');
+
+    if (!$id_reserva) {
+        $this->output->set_status_header(400)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['success' => false, 'mensaje' => 'Falta id_reserva.']));
+        return;
+    }
+
+    $resultado = $this->Alumna_model->AL_05($rut_alumna, $id_reserva);
+
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($resultado));
+    }
 
     public function rutina()
     {

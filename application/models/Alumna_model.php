@@ -24,7 +24,8 @@ class Alumna_model extends CI_Model {
     $sql = "SELECT b.id_bloque, b.fecha, b.hora_inicio, b.hora_termino, b.cupos_maximos, "
          . "p.nombre AS profesor_nombre, p.especialidad, "
          . "COUNT(r.id_reserva) AS cupos_ocupados, "
-         . "MAX(CASE WHEN r.rut_alumna = ? AND r.vigente = 1 THEN 1 ELSE 0 END) AS reservado_por_mi "
+         . "MAX(CASE WHEN r.rut_alumna = ? AND r.vigente = 1 THEN 1 ELSE 0 END) AS reservado_por_mi, "
+         . "MAX(CASE WHEN r.rut_alumna = ? AND r.vigente = 1 THEN r.id_reserva ELSE NULL END) AS id_reserva_propia "
          . "FROM bloque_horario AS b "
          . "JOIN profesor AS p ON p.rut = b.rut_profesor "
          . "LEFT JOIN reserva AS r ON r.id_bloque = b.id_bloque AND r.vigente = 1 "
@@ -32,8 +33,42 @@ class Alumna_model extends CI_Model {
          . "GROUP BY b.id_bloque, b.fecha, b.hora_inicio, b.hora_termino, b.cupos_maximos, p.nombre, p.especialidad "
          . "ORDER BY b.fecha ASC, b.hora_inicio ASC";
 
-    return $this->db->query($sql, [$alumna, $fecha_inicio, $fecha_fin])->result();
-}
+    return $this->db->query($sql, [$alumna, $alumna, $fecha_inicio, $fecha_fin])->result();
+    }  
+    
+    public function AL_05($alumna, $id_reserva) {
+    $reserva = $this->db->query(
+        "SELECT r.id_reserva, pa.id_plan_alumna "
+        . "FROM reserva AS r "
+        . "LEFT JOIN plan_alumna AS pa ON pa.rut_alumna = r.rut_alumna AND pa.id_estado_plan = 1 "
+        . "WHERE r.id_reserva = ? AND r.rut_alumna = ? AND r.vigente = 1 "
+        . "LIMIT 1",
+        [$id_reserva, $alumna]
+    )->row();
+
+    if (!$reserva) {
+        return ['success' => false, 'mensaje' => 'La reserva no existe, ya fue cancelada, o no te pertenece.'];
+    }
+
+    $this->db->trans_start();
+
+    $this->db->query("UPDATE reserva SET vigente = 0 WHERE id_reserva = ?", [$id_reserva]);
+
+    if ($reserva->id_plan_alumna) {
+        $this->db->query(
+            "UPDATE plan_alumna SET clases_restantes = clases_restantes + 1 WHERE id_plan_alumna = ?",
+            [$reserva->id_plan_alumna]
+        );
+    }
+
+    $this->db->trans_complete();
+
+    if ($this->db->trans_status() === FALSE) {
+        return ['success' => false, 'mensaje' => 'No se pudo cancelar la reserva. Intenta de nuevo.'];
+    }
+
+    return ['success' => true, 'mensaje' => 'Reserva cancelada correctamente.'];
+    } 
     
 
 

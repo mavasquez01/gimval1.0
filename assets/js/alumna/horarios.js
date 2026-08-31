@@ -65,7 +65,7 @@
                 : '';
 
             const href = b.reservado_por_mi
-                ? BASE_URL + 'alumna/CancelarBloqye/' + b.id_bloque + 
+                ? BASE_URL + 'alumna/CancelarBloqye/' + b.id_bloque
                 : '#';
 
             return (
