@@ -1,3 +1,5 @@
-<script src="../js/bootstrap.bundle.min.js"></script>
+<script src="<?= base_url('/assets/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="<?= base_url('assets/js/autenticacion/validarCompletarPerfilAlumna.js') ?>"></script>
     </body>
 </html>

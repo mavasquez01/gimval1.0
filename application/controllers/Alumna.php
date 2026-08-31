@@ -197,9 +197,10 @@ class Alumna extends CI_Controller
 
     public function convenios()
     {
+        $data['convenios'] = $this->Alumna_model->AL_08();
 
         $this->load->view('template/alumna/convenios/header');
-        $this->load->view('alumna/convenios');
+        $this->load->view('alumna/convenios', $data);
         $this->load->view('template/alumna/convenios/footer');
     }
 

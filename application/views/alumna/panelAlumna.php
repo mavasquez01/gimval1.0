@@ -245,7 +245,7 @@
                     </a>
                 </div>
                 <div class="schedule-card mb-2">
-                    <a href=""<?= site_url('alumna/convenios') ?>"" class="d-flex align-items-center text-white">
+                    <a href="<?= site_url('alumna/convenios') ?>" class="d-flex align-items-center text-white">
                         <i class="bi bi-person me-3 text-pink"></i>
                         Ver Convenios
                     </a>

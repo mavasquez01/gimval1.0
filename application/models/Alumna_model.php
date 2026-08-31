@@ -335,6 +335,15 @@ class Alumna_model extends CI_Model
         ]);
     }
 
+    // Obtener convenios activos
+    public function AL_08()
+    {
+        $this->db->where('estado', 1);
+        $query = $this->db->get('convenio');
+
+        return $query->result();
+    }
+
     private function ejecutar_sp($sql, $params = [])
     {
         $db_debug = $this->db->db_debug;
@@ -377,6 +386,19 @@ class Alumna_model extends CI_Model
                 $res->free();
             }
         }
+    }
+
+    public function guardarPerfil($datos)
+    {
+        return $this->db->insert('alumna', $datos);
+    }
+
+    public function buscarPorRut($rut)
+    {
+        $this->db->where('rut', $rut);
+        $query = $this->db->get('alumna');
+
+        return $query->row();
     }
 }
 
