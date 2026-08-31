@@ -786,16 +786,14 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     }
 }
 
-.nav-link.active {
+.sidebar-link.active {
     color: var(--bs-primary) !important;
-}
-
-.nav-link.active::after {
-    display: none;
-}
-.nav-link.active {
     border-left: 3px solid var(--bs-primary);
     padding-left: 12px;
+}
+
+.sidebar-link.active::after {
+    display: none;
 }
 
 /* =====================================================

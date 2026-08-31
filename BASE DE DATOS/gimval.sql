@@ -1,345 +1,216 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Servidor: 127.0.0.1
--- Tiempo de generación: 20-08-2026 a las 02:25:16
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Base de datos: `gimval`
---
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `bloque_horario`
---
-
-CREATE TABLE `bloque_horario` (
-  `id_bloque` int(11) NOT NULL,
-  `rut_profesor` varchar(12) DEFAULT NULL,
-  `fecha` date DEFAULT NULL,
-  `hora_inicio` time DEFAULT NULL,
-  `hora_termino` time DEFAULT NULL,
-  `cupos_maximos` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `convenio`
---
-
-CREATE TABLE `convenio` (
-  `id_convenio` int(11) NOT NULL,
-  `nombre_comercio` varchar(250) DEFAULT NULL,
-  `descripcion` text DEFAULT NULL,
-  `codigo_promocional` varchar(30) DEFAULT NULL,
-  `estado` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `detalle_rutina`
---
-
-CREATE TABLE `detalle_rutina` (
-  `id_detalle_rutina` int(11) NOT NULL,
-  `id_rutina` int(11) DEFAULT NULL,
-  `id_ejercicio` int(11) DEFAULT NULL,
-  `series` int(11) DEFAULT NULL,
-  `repeticiones` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `ejercicio`
---
-
-CREATE TABLE `ejercicio` (
-  `id_ejercicio` int(11) NOT NULL,
-  `nombre_ejercicio` varchar(120) DEFAULT NULL,
-  `descripción` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `plan`
---
-
-CREATE TABLE `plan` (
-  `id_plan` int(11) NOT NULL,
-  `nombre_plan` varchar(120) DEFAULT NULL,
-  `cantidad_clases` int(11) DEFAULT NULL,
-  `precio` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `plan_alumna`
---
-
-CREATE TABLE `plan_alumna` (
-  `id_plan_alumna` int(11) NOT NULL,
-  `rut_alumna` varchar(12) DEFAULT NULL,
-  `id_plan` int(11) DEFAULT NULL,
-  `fecha_inicio` date DEFAULT NULL,
-  `fecha_termino` date DEFAULT NULL,
-  `clases_restantes` int(11) DEFAULT NULL,
-  `estado` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `progreso_alumna`
---
-
-CREATE TABLE `progreso_alumna` (
-  `id_progreso` int(11) NOT NULL,
-  `rut_alumna` varchar(12) DEFAULT NULL,
-  `id_ejercicio` int(11) DEFAULT NULL,
-  `fecha` date DEFAULT NULL,
-  `peso_kg` float DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `reserva`
---
-
-CREATE TABLE `reserva` (
-  `id_reserva` int(11) NOT NULL,
-  `id_bloque` int(11) DEFAULT NULL,
-  `rut_alumna` varchar(12) DEFAULT NULL,
-  `fecha_reserva` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `asistencia` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `rutina`
---
-
-CREATE TABLE `rutina` (
-  `id_rutina` int(11) NOT NULL,
-  `id_bloque` int(11) DEFAULT NULL,
-  `rut_profesor` varchar(12) DEFAULT NULL,
-  `fecha` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `usuario`
---
-
-CREATE TABLE `usuario` (
-  `rut` varchar(12) NOT NULL,
-  `nombre` varchar(60) DEFAULT NULL,
-  `apellido` varchar(60) DEFAULT NULL,
-  `edad` int(11) DEFAULT NULL,
-  `correo` varchar(120) DEFAULT NULL,
-  `contraseña` varchar(120) DEFAULT NULL,
-  `rol` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `bloque_horario`
---
-ALTER TABLE `bloque_horario`
-  ADD PRIMARY KEY (`id_bloque`),
-  ADD KEY `fk_idUsuario` (`rut_profesor`);
-
---
--- Indices de la tabla `convenio`
---
-ALTER TABLE `convenio`
-  ADD PRIMARY KEY (`id_convenio`);
-
---
--- Indices de la tabla `detalle_rutina`
---
-ALTER TABLE `detalle_rutina`
-  ADD PRIMARY KEY (`id_detalle_rutina`),
-  ADD KEY `fk_detalle_idRutina` (`id_rutina`),
-  ADD KEY `fk_detalle_idejercicio` (`id_ejercicio`);
-
---
--- Indices de la tabla `ejercicio`
---
-ALTER TABLE `ejercicio`
-  ADD PRIMARY KEY (`id_ejercicio`);
-
---
--- Indices de la tabla `plan`
---
-ALTER TABLE `plan`
-  ADD PRIMARY KEY (`id_plan`);
-
---
--- Indices de la tabla `plan_alumna`
---
-ALTER TABLE `plan_alumna`
-  ADD PRIMARY KEY (`id_plan_alumna`),
-  ADD KEY `fk_plan_idUsuario` (`rut_alumna`),
-  ADD KEY `fk_plan_idPlan` (`id_plan`);
-
---
--- Indices de la tabla `progreso_alumna`
---
-ALTER TABLE `progreso_alumna`
-  ADD PRIMARY KEY (`id_progreso`),
-  ADD KEY `fk_progreso_idUsuario` (`rut_alumna`),
-  ADD KEY `fk_progreso_idEjercicio` (`id_ejercicio`);
-
---
--- Indices de la tabla `reserva`
---
-ALTER TABLE `reserva`
-  ADD PRIMARY KEY (`id_reserva`),
-  ADD KEY `fk_idBloque` (`id_bloque`),
-  ADD KEY `fk_idRutAlumna` (`rut_alumna`);
-
---
--- Indices de la tabla `rutina`
---
-ALTER TABLE `rutina`
-  ADD PRIMARY KEY (`id_rutina`),
-  ADD KEY `fk_rutina_idUsuario` (`rut_profesor`);
-
---
--- Indices de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  ADD PRIMARY KEY (`rut`),
-  ADD UNIQUE KEY `correo` (`correo`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `bloque_horario`
---
-ALTER TABLE `bloque_horario`
-  MODIFY `id_bloque` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `convenio`
---
-ALTER TABLE `convenio`
-  MODIFY `id_convenio` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `detalle_rutina`
---
-ALTER TABLE `detalle_rutina`
-  MODIFY `id_detalle_rutina` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `ejercicio`
---
-ALTER TABLE `ejercicio`
-  MODIFY `id_ejercicio` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `plan`
---
-ALTER TABLE `plan`
-  MODIFY `id_plan` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `plan_alumna`
---
-ALTER TABLE `plan_alumna`
-  MODIFY `id_plan_alumna` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `progreso_alumna`
---
-ALTER TABLE `progreso_alumna`
-  MODIFY `id_progreso` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `reserva`
---
-ALTER TABLE `reserva`
-  MODIFY `id_reserva` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `rutina`
---
-ALTER TABLE `rutina`
-  MODIFY `id_rutina` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `bloque_horario`
---
-ALTER TABLE `bloque_horario`
-  ADD CONSTRAINT `fk_idUsuario` FOREIGN KEY (`rut_profesor`) REFERENCES `usuario` (`rut`);
-
---
--- Filtros para la tabla `detalle_rutina`
---
-ALTER TABLE `detalle_rutina`
-  ADD CONSTRAINT `fk_detalle_idRutina` FOREIGN KEY (`id_rutina`) REFERENCES `rutina` (`id_rutina`),
-  ADD CONSTRAINT `fk_detalle_idejercicio` FOREIGN KEY (`id_ejercicio`) REFERENCES `ejercicio` (`id_ejercicio`);
-
---
--- Filtros para la tabla `plan_alumna`
---
-ALTER TABLE `plan_alumna`
-  ADD CONSTRAINT `fk_plan_idPlan` FOREIGN KEY (`id_plan`) REFERENCES `plan` (`id_plan`),
-  ADD CONSTRAINT `fk_plan_idUsuario` FOREIGN KEY (`rut_alumna`) REFERENCES `usuario` (`rut`);
-
---
--- Filtros para la tabla `progreso_alumna`
---
-ALTER TABLE `progreso_alumna`
-  ADD CONSTRAINT `fk_progreso_idEjercicio` FOREIGN KEY (`id_ejercicio`) REFERENCES `ejercicio` (`id_ejercicio`),
-  ADD CONSTRAINT `fk_progreso_idUsuario` FOREIGN KEY (`rut_alumna`) REFERENCES `usuario` (`rut`);
-
---
--- Filtros para la tabla `reserva`
---
-ALTER TABLE `reserva`
-  ADD CONSTRAINT `fk_idBloque` FOREIGN KEY (`id_bloque`) REFERENCES `bloque_horario` (`id_bloque`),
-  ADD CONSTRAINT `fk_idRutAlumna` FOREIGN KEY (`rut_alumna`) REFERENCES `usuario` (`rut`);
-
---
--- Filtros para la tabla `rutina`
---
-ALTER TABLE `rutina`
-  ADD CONSTRAINT `fk_rutina_idUsuario` FOREIGN KEY (`rut_profesor`) REFERENCES `usuario` (`rut`);
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- ============================================================
+-- ESQUEMA NORMALIZADO - GIMVAL
+-- Rediseño con separación de roles y adecuación a la
+-- Ley 21.719 sobre Protección de Datos Personales (Chile)
+-- ============================================================
+ 
+SET FOREIGN_KEY_CHECKS = 0;
+ 
+-- ------------------------------------------------------------
+-- 1. CATÁLOGOS (evitan "números mágicos" sueltos en las tablas)
+-- ------------------------------------------------------------
+ 
+CREATE TABLE rol (
+    id_rol      INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_rol  VARCHAR(30) NOT NULL UNIQUE   -- 'alumna', 'profesor', 'administrador'
+);
+ 
+INSERT INTO rol (nombre_rol) VALUES ('alumna'), ('profesor'), ('administrador');
+ 
+CREATE TABLE estado_plan (
+    id_estado_plan  INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_estado   VARCHAR(30) NOT NULL UNIQUE   -- 'activo', 'vencido', 'suspendido'
+);
+ 
+INSERT INTO estado_plan (nombre_estado) VALUES ('activo'), ('vencido'), ('suspendido');
+ 
+-- ------------------------------------------------------------
+-- 2. AUTENTICACIÓN
+-- Solo credenciales de acceso. NO contiene nombre, RUT, ni
+-- ningún dato personal identificable adicional
+-- (principio de minimización de datos, art. 6 Ley 21.719).
+-- ------------------------------------------------------------
+ 
+CREATE TABLE usuario (
+    id_usuario        INT AUTO_INCREMENT PRIMARY KEY,
+    email             VARCHAR(120) NOT NULL UNIQUE,
+    contrasena_hash   VARCHAR(255) NOT NULL,   -- SIEMPRE hash (bcrypt/argon2), nunca texto plano
+    id_rol            INT NOT NULL,
+    activo            TINYINT(1) NOT NULL DEFAULT 1,
+    fecha_creacion    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ultimo_acceso     DATETIME NULL,
+    CONSTRAINT fk_usuario_rol FOREIGN KEY (id_rol) REFERENCES rol(id_rol)
+);
+ 
+-- ------------------------------------------------------------
+-- 3. SUBTIPOS DE PERSONA (uno por rol)
+-- Cada uno referencia 1:1 a usuario. El "activo" permite
+-- anonimizar en vez de borrar físicamente (derecho de
+-- eliminación / "al olvido", art. 5 y 18 Ley 21.719), sin
+-- destruir la integridad referencial del historial operativo.
+-- ------------------------------------------------------------
+ 
+CREATE TABLE alumna (
+    rut                 VARCHAR(12) PRIMARY KEY,
+    id_usuario          INT NOT NULL UNIQUE,
+    nombre              VARCHAR(60) NOT NULL,
+    apellido            VARCHAR(60) NOT NULL,
+    fecha_nacimiento    DATE NOT NULL,          -- reemplaza "edad" (dato que caducaba)
+    telefono            VARCHAR(20) NULL,
+    fecha_registro      DATE NOT NULL DEFAULT (CURRENT_DATE),
+    activo              TINYINT(1) NOT NULL DEFAULT 1,
+    CONSTRAINT fk_alumna_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
+);
+ 
+CREATE TABLE profesor (
+    rut                 VARCHAR(12) PRIMARY KEY,
+    id_usuario          INT NOT NULL UNIQUE,
+    nombre              VARCHAR(60) NOT NULL,
+    apellido            VARCHAR(60) NOT NULL,
+    especialidad        VARCHAR(100) NULL,
+    fecha_contratacion  DATE NULL,
+    activo              TINYINT(1) NOT NULL DEFAULT 1,
+    CONSTRAINT fk_profesor_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
+);
+ 
+CREATE TABLE administrador (
+    rut                 VARCHAR(12) PRIMARY KEY,
+    id_usuario          INT NOT NULL UNIQUE,
+    nombre              VARCHAR(60) NOT NULL,
+    apellido            VARCHAR(60) NOT NULL,
+    cargo               VARCHAR(60) NULL,
+    activo              TINYINT(1) NOT NULL DEFAULT 1,
+    CONSTRAINT fk_admin_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
+);
+ 
+-- ------------------------------------------------------------
+-- 4. CONSENTIMIENTO SOBRE DATOS SENSIBLES
+-- La ley exige base de licitud (consentimiento) para tratar
+-- datos sensibles (ej. datos relacionados con salud/condición
+-- física) y permitir su revocación en cualquier momento.
+-- ------------------------------------------------------------
+ 
+CREATE TABLE consentimiento (
+    id_consentimiento   INT AUTO_INCREMENT PRIMARY KEY,
+    rut_alumna          VARCHAR(12) NOT NULL,
+    tipo_dato           VARCHAR(60) NOT NULL,     -- ej. 'datos_fisicos_salud'
+    fecha_otorgamiento  DATETIME NOT NULL,
+    fecha_revocacion    DATETIME NULL,
+    vigente             TINYINT(1) NOT NULL DEFAULT 1,
+    CONSTRAINT fk_consentimiento_alumna FOREIGN KEY (rut_alumna) REFERENCES alumna(rut)
+);
+ 
+-- ------------------------------------------------------------
+-- 5. DATOS FÍSICOS / DE SALUD (separados y con acceso restringido)
+-- No se mezclan con la identidad de la alumna. El acceso a esta
+-- tabla debería limitarse a nivel de aplicación (solo la propia
+-- alumna, su profesor asignado y administración).
+-- ------------------------------------------------------------
+ 
+CREATE TABLE datos_fisicos_alumna (
+    id_dato_fisico  INT AUTO_INCREMENT PRIMARY KEY,
+    rut_alumna      VARCHAR(12) NOT NULL,
+    peso_kg         DECIMAL(5,2) NULL,   -- antes float: impreciso para datos sensibles
+    altura_cm       DECIMAL(5,2) NULL,
+    fecha_registro  DATE NOT NULL,
+    CONSTRAINT fk_datosfisicos_alumna FOREIGN KEY (rut_alumna) REFERENCES alumna(rut)
+);
+ 
+-- ------------------------------------------------------------
+-- 6. OPERACIÓN DEL GIMNASIO
+-- ------------------------------------------------------------
+ 
+CREATE TABLE bloque_horario (
+    id_bloque       INT AUTO_INCREMENT PRIMARY KEY,
+    rut_profesor    VARCHAR(12) NOT NULL,
+    fecha           DATE NOT NULL,
+    hora_inicio     TIME NOT NULL,
+    hora_termino    TIME NOT NULL,
+    cupos_maximos   INT NOT NULL,
+    CONSTRAINT fk_bloque_profesor FOREIGN KEY (rut_profesor) REFERENCES profesor(rut)
+);
+ 
+CREATE TABLE reserva (
+    id_reserva      INT AUTO_INCREMENT PRIMARY KEY,
+    id_bloque       INT NOT NULL,
+    rut_alumna      VARCHAR(12) NOT NULL,
+    fecha_reserva   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    asistencia      TINYINT(1) NOT NULL DEFAULT 0,
+    CONSTRAINT fk_reserva_bloque FOREIGN KEY (id_bloque) REFERENCES bloque_horario(id_bloque),
+    CONSTRAINT fk_reserva_alumna FOREIGN KEY (rut_alumna) REFERENCES alumna(rut)
+);
+ 
+CREATE TABLE rutina (
+    id_rutina   INT AUTO_INCREMENT PRIMARY KEY,
+    id_bloque   INT NOT NULL,
+    fecha       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    -- rut_profesor eliminado: se infiere vía bloque_horario.rut_profesor
+    CONSTRAINT fk_rutina_bloque FOREIGN KEY (id_bloque) REFERENCES bloque_horario(id_bloque)
+);
+ 
+CREATE TABLE ejercicio (
+    id_ejercicio      INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_ejercicio  VARCHAR(120) NOT NULL,
+    descripcion       TEXT NULL
+);
+ 
+CREATE TABLE detalle_rutina (
+    id_detalle_rutina  INT AUTO_INCREMENT PRIMARY KEY,
+    id_rutina          INT NOT NULL,
+    id_ejercicio       INT NOT NULL,
+    orden              INT NOT NULL DEFAULT 1,
+    series             INT NOT NULL,
+    repeticiones       INT NOT NULL,
+    CONSTRAINT fk_detalle_rutina FOREIGN KEY (id_rutina) REFERENCES rutina(id_rutina),
+    CONSTRAINT fk_detalle_ejercicio FOREIGN KEY (id_ejercicio) REFERENCES ejercicio(id_ejercicio)
+);
+ 
+CREATE TABLE progreso_alumna (
+    id_progreso   INT AUTO_INCREMENT PRIMARY KEY,
+    rut_alumna    VARCHAR(12) NOT NULL,
+    id_ejercicio  INT NOT NULL,
+    fecha         DATE NOT NULL,
+    peso_kg       DECIMAL(5,2) NULL,
+    CONSTRAINT fk_progreso_alumna FOREIGN KEY (rut_alumna) REFERENCES alumna(rut),
+    CONSTRAINT fk_progreso_ejercicio FOREIGN KEY (id_ejercicio) REFERENCES ejercicio(id_ejercicio)
+);
+ 
+-- ------------------------------------------------------------
+-- 7. PLANES Y CONVENIOS
+-- (sin procesamiento de pagos: plan.precio es solo informativo)
+-- ------------------------------------------------------------
+ 
+CREATE TABLE plan (
+    id_plan             INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_plan         VARCHAR(120) NOT NULL,
+    cantidad_clases     INT NOT NULL,
+    precio              INT NOT NULL
+);
+ 
+CREATE TABLE plan_alumna (
+    id_plan_alumna    INT AUTO_INCREMENT PRIMARY KEY,
+    rut_alumna        VARCHAR(12) NOT NULL,
+    id_plan           INT NOT NULL,
+    fecha_inicio      DATE NOT NULL,
+    fecha_termino     DATE NOT NULL,
+    clases_restantes  INT NOT NULL,
+    id_estado_plan    INT NOT NULL,
+    CONSTRAINT fk_planalumna_alumna FOREIGN KEY (rut_alumna) REFERENCES alumna(rut),
+    CONSTRAINT fk_planalumna_plan FOREIGN KEY (id_plan) REFERENCES plan(id_plan),
+    CONSTRAINT fk_planalumna_estado FOREIGN KEY (id_estado_plan) REFERENCES estado_plan(id_estado_plan)
+);
+ 
+-- Convenio: códigos de descuento que las alumnas usan fuera del
+-- gimnasio (comercios asociados). La plataforma no procesa pagos
+-- de ningún tipo, por lo que no existe relación con plan_alumna
+-- ni ninguna tabla de transacciones; es un catálogo autónomo.
+CREATE TABLE convenio (
+    id_convenio          INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_comercio      VARCHAR(250) NOT NULL,
+    descripcion          TEXT NULL,
+    codigo_promocional   VARCHAR(30) NOT NULL UNIQUE,
+    estado               TINYINT(1) NOT NULL DEFAULT 1
+);
+ 
+SET FOREIGN_KEY_CHECKS = 1;
+ 

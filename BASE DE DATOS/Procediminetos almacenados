@@ -1,0 +1,15 @@
+DELIMITER //
+CREATE PROCEDURE prox_clase(
+	IN rut_alumna VARCHAR(12)
+)
+BEGIN
+    SELECT r.id_reserva, b.fecha, b.hora_inicio, p.nombre, r.vigente  
+    FROM reserva as r 
+    JOIN bloque_horario as b ON r.id_bloque = b.id_bloque
+    JOIN profesor as p ON b.rut_profesor = p.rut
+    WHERE rut_alumna = rut_alumna AND r.vigente = 1 AND NOW() < b.hora_inicio
+    ORDER BY b.fecha ASC, b.hora_inicio ASC
+    LIMIT 1;
+END //
+
+DELIMITER ;

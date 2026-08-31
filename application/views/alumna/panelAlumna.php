@@ -17,8 +17,11 @@
                 </p>
             </section>
 
-            <!-- Próxima clase -->
+            <?php if ($al_01): ?>
+                 <!-- Próxima clase -->
             <section class="plan-card">
+
+            
 
                 <p class="text-secondary mb-2">
                     Próxima Clase
@@ -28,7 +31,14 @@
 
                     <div>
                         <h2 class="text-white mb-1">
-                            Hoy 18:00
+                            <?php
+                             if ($al_01->fecha == date('Y-m-d')) {
+                                echo "Hoy ", $al_01->hora_inicio;
+                            } else {
+                                $fecha = new DateTime($al_01->fecha);
+                                echo $fecha->format('d-m-Y'), " ", $al_01->hora_inicio;
+                            }
+                            ?>
                         </h2>
 
                         <h5 class="text-white mb-0">
@@ -49,7 +59,7 @@
                     </p>
 
                     <p class="text-white text-end mb-0">
-                        Camila
+                        <?= $al_01->nombre ?>
                     </p>
 
                 </div>
@@ -61,7 +71,7 @@
                     </p>
 
                     <p class="text-white text-end mb-0">
-                        <span class="text-pink fw-bold">5</span> de 15
+                        <span class="text-pink fw-bold"><?= $al_03->clases_restantes ?></span> de <?= $al_03->total_clases ?>
                     </p>
 
                 </div>
@@ -73,354 +83,93 @@
                 </div>
 
             </section>
+            <?php else: ?>
+                <p class="text-secondary text-center">No tienes clases próximas agendadas.</p>
+            <?php endif; ?>
+
+           
 
             <div class="mt-4">
 
                 <h5 class="text-white text-center mb-4">
                     Próximas clases
                 </h5>
+                <?php
+                foreach ($al_02 as $clase) {
+                    $fecha = $clase->fecha;
+                    $date = new DateTime($fecha);
+                    $dia = $date->format('l');
+                    $horadb = $clase->hora_inicio;
+                    $hora = new DateTime($horadb);
+                ?>
+                
 
-                <div class="schedule-card mb-2">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5 class="text-white mb-1">Mié 18:00</h5>
-                            <p class="text-white mb-0">Funcional</p>
+                        <div class="schedule-card mb-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="text-white mb-1">    
+                                    <?php
+                                        switch ($dia) {
+                                        case 'Monday':
+                                            echo "Lun ",$hora->format('H:i');
+                                            break;
+                                        case 'Tuesday':
+                                            echo "Mar ",$hora->format('H:i');
+                                            break;
+                                        case 'Wednesday':
+                                            echo "Mier ",$hora->format('H:i');
+                                            break;
+                                        case 'Thursday':
+                                            echo "Jue ",$hora->format('H:i');
+                                            break;
+                                        case 'Friday':
+                                            echo "Vie ",$hora->format('H:i');
+                                            break;
+                                        case 'Saturday':
+                                            echo "Sab ",$hora->format('H:i');
+                                            break;
+                                        default:
+                                            echo $clase->fecha," ",$hora->format('H:i');
+                                            break;
+                                    }
+                                    ?>
+                                    </h5>
+                                </div>
+
+                                <small class="text-pink">
+                                    Prof. <?= $clase->nombre ?>
+                                </small>
+                            </div>
                         </div>
 
-                        <small class="text-pink">
-                            Prof. Camila
-                        </small>
-                    </div>
-                </div>
-
-                <div class="schedule-card mb-2">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5 class="text-white mb-1">Vie 19:00</h5>
-                            <p class="text-white mb-0">GAP</p>
-                        </div>
-
-                        <small class="text-pink">
-                            Prof. Natalia
-                        </small>
-                    </div>
-                </div>
-
-                <div class="schedule-card mb-2">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5 class="text-white mb-1">Lun 20:00</h5>
-                            <p class="text-white mb-0">Spinning</p>
-                        </div>
-
-                        <small class="text-pink">
-                            Prof. Fernanda
-                        </small>
-                    </div>
-                </div>
+                <?php
+                    }
+                    ?>
 
             </div>
 
         </section>
 
         <!-- Agenda -->
-        <section class="tab-pane fade" id="agenda" role="tabpanel" aria-labelledby="agenda-tab">
+<section class="tab-pane fade" id="agenda" role="tabpanel" aria-labelledby="agenda-tab">
 
-            <div class="container-fluid px-4" style="max-width: 420px;">
+    <div class="container-fluid px-4" style="max-width: 420px;">
 
+        <div class="text-center mb-4">
+            <p class="text-secondary mb-3" id="agenda-texto-semana">Cargando semana...</p>
 
-                <div class="text-center mb-4">
-                    <p class="text-secondary mb-3">
-                        Semana del 12 al 18 Mayo
-                    </p>
+            <ul class="nav nav-tabs border-0 justify-content-between" id="dias-tab" role="tablist">
+                <!-- generado por JS -->
+            </ul>
+        </div>
 
-                    <!-- Tabs -->
-                    <ul class="nav nav-tabs border-0 justify-content-between" id="dias-tab" role="tablist">
+        <div class="tab-content mt-4" id="dias-tab-content">
+            <!-- generado por JS -->
+        </div>
 
-                        <li class="nav-item">
-                            <button class="nav-link active" id="lunes-tab" data-bs-toggle="tab"
-                                data-bs-target="#lunes-pane" type="button">
-                                <small>L</small><br>12
-                            </button>
-                        </li>
+    </div>
 
-                        <li class="nav-item">
-                            <button class="nav-link" id="martes-tab" data-bs-toggle="tab" data-bs-target="#martes-pane"
-                                type="button">
-                                <small>M</small><br>13
-                            </button>
-                        </li>
-
-                        <li class="nav-item">
-                            <button class="nav-link" id="miercoles-tab" data-bs-toggle="tab"
-                                data-bs-target="#miercoles-pane" type="button">
-                                <small>W</small><br>14
-                            </button>
-                        </li>
-
-                        <li class="nav-item">
-                            <button class="nav-link" id="jueves-tab" data-bs-toggle="tab" data-bs-target="#jueves-pane"
-                                type="button">
-                                <small>J</small><br>15
-                            </button>
-                        </li>
-
-                        <li class="nav-item">
-                            <button class="nav-link" id="viernes-tab" data-bs-toggle="tab"
-                                data-bs-target="#viernes-pane" type="button">
-                                <small>V</small><br>16
-                            </button>
-                        </li>
-
-                        <li class="nav-item">
-                            <button class="nav-link" id="sabado-tab" data-bs-toggle="tab" data-bs-target="#sabado-pane"
-                                type="button">
-                                <small>S</small><br>17
-                            </button>
-                        </li>
-
-                    </ul>
-                </div>
-
-                <!-- ONE tab-content only -->
-                <div class="tab-content mt-4">
-
-                    <!-- Monday -->
-                    <div class="tab-pane fade show active" id="lunes-pane" role="tabpanel">
-
-                        <a href="editarBloque.html" class="text-decoration-none" data-bs-toggle="modal"
-                            data-bs-target="#confirmarAgendamientoModal">
-
-                            <div class="schedule-card mb-3 clickable-card">
-
-                                <div class="d-flex justify-content-between align-items-center">
-
-                                    <div>
-                                        <h5 class="text-white mb-1">
-                                            09:00
-                                        </h5>
-
-                                        <p class="text-white mb-1">
-                                            Funcional - Camila
-                                        </p>
-
-                                        <small class="text-secondary">
-                                            12 Mayo 2026
-                                        </small>
-                                    </div>
-
-                                    <div class="text-end">
-
-                                        <p class="text-secondary mb-1">
-                                            11/15
-                                        </p>
-
-                                        <small class="text-secondary">
-                                            AGENDAR
-                                        </small>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </a>
-                        <a href="editarBloque.html" class="text-decoration-none" data-bs-toggle="modal"
-                            data-bs-target="#confirmarAgendamientoModal">
-
-                            <div class="schedule-card mb-3 clickable-card">
-
-                                <div class="d-flex justify-content-between align-items-center">
-
-                                    <div>
-                                        <h5 class="text-white mb-1">
-                                            09:00
-                                        </h5>
-
-                                        <p class="text-white mb-1">
-                                            Funcional - Camila
-                                        </p>
-
-                                        <small class="text-secondary">
-                                            12 Mayo 2026
-                                        </small>
-                                    </div>
-
-                                    <div class="text-end">
-
-                                        <p class="text-secondary mb-1">
-                                            13/15
-                                        </p>
-
-                                        <small class="text-secondary">
-                                            AGENDAR
-                                        </small>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </a>
-                        <a href="editarBloque.html" class="text-decoration-none" data-bs-toggle="modal"
-                            data-bs-target="#confirmarAgendamientoModal">
-
-                            <div class="schedule-card mb-3 clickable-card">
-
-                                <div class="d-flex justify-content-between align-items-center">
-
-                                    <div>
-                                        <h5 class="text-white mb-1">
-                                            09:00
-                                        </h5>
-
-                                        <p class="text-white mb-1">
-                                            Funcional - Camila
-                                        </p>
-
-                                        <small class="text-secondary">
-                                            12 Mayo 2026
-                                        </small>
-                                    </div>
-
-                                    <div class="text-end">
-
-                                        <p class="text-secondary mb-1">
-                                            14/15
-                                        </p>
-
-                                        <small class="text-secondary">
-                                            AGENDAR
-                                        </small>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </a>
-
-                    </div>
-
-                    <!-- Tuesday -->
-                    <div class="tab-pane fade" id="martes-pane" role="tabpanel">
-
-                        <a href="editarBloque.html" class="text-decoration-none" data-bs-toggle="modal"
-                            data-bs-target="#confirmarAgendamientoModal">
-
-                            <div class="schedule-card mb-3 clickable-card">
-
-                                <div class="d-flex justify-content-between align-items-center">
-
-                                    <div>
-                                        <h5 class="text-white mb-1">
-                                            09:00
-                                        </h5>
-
-                                        <p class="text-white mb-1">
-                                            Funcional - Camila
-                                        </p>
-
-                                        <small class="text-secondary">
-                                            12 Mayo 2026
-                                        </small>
-                                    </div>
-
-                                    <div class="text-end">
-
-                                        <p class="text-secondary mb-1">
-                                            7/15
-                                        </p>
-
-                                        <small class="text-secondary">
-                                            AGENDAR
-                                        </small>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </a>
-                    </div>
-
-                    <!-- Wednesday -->
-                    <div class="tab-pane fade" id="miercoles-pane" role="tabpanel">
-
-                        <a href="editarBloque.html" class="text-decoration-none" data-bs-toggle="modal"
-                            data-bs-target="#confirmarAgendamientoModal">
-
-                            <div class="schedule-card mb-3 clickable-card">
-
-                                <div class="d-flex justify-content-between align-items-center">
-
-                                    <div>
-                                        <h5 class="text-white mb-1">
-                                            09:00
-                                        </h5>
-
-                                        <p class="text-white mb-1">
-                                            Funcional - Camila
-                                        </p>
-
-                                        <small class="text-secondary">
-                                            12 Mayo 2026
-                                        </small>
-                                    </div>
-
-                                    <div class="text-end">
-
-                                        <p class="text-secondary mb-1">
-                                            10/15
-                                        </p>
-
-                                        <small class="text-secondary">
-                                            Editar →
-                                        </small>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </a>
-
-                    </div>
-
-                    <!-- Thursday -->
-                    <div class="tab-pane fade" id="jueves-pane">
-                        <p class="text-secondary text-center">
-                            No hay clases
-                        </p>
-                    </div>
-
-                    <!-- Friday -->
-                    <div class="tab-pane fade" id="viernes-pane">
-                        <p class="text-secondary text-center">
-                            No hay clases
-                        </p>
-                    </div>
-
-                    <!-- Saturday -->
-                    <div class="tab-pane fade" id="sabado-pane">
-                        <p class="text-secondary text-center">
-                            No hay clases
-                        </p>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-        </section>
-
+</section>
         <!-- Clases -->
         <div class="tab-pane fade px-4" id="clases">
 
@@ -742,19 +491,19 @@
 
                 <div class="d-flex align-items-center mb-4">
 
-                    <img src="../static/alumna1.jpg" alt="Foto de perfil" class="profile-avatar me-3">
+                    <img src="<?= base_url('/assets/images/alumna1.jpg') ?>" alt="Foto de perfil" class="profile-avatar me-3">
 
                     <div>
 
                         <?php if ($perfil): ?>
 
                             <h5 class="text-white mb-1">
-                                <?= html_escape($perfil->nombre) ?>
-                                <?= html_escape($perfil->apellido) ?>
+                                <?= ($perfil->nombre) ?>
+                                <?= ($perfil->apellido) ?>
                             </h5>
 
                             <p class="text-secondary mb-0">
-                                <?= html_escape($perfil->correo) ?>
+                                <?= ($perfil->correo) ?>
                             </p>
 
                         <?php endif; ?>
