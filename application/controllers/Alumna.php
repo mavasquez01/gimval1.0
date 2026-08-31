@@ -15,7 +15,7 @@ class Alumna extends CI_Controller
 
         //true: login obligatorio 
         //false: para acceder sin login
-        $protegerRutas = true;
+        $protegerRutas = false;
 
         if ($protegerRutas) {
             if (!$this->session->userdata('logueado')) {
@@ -30,9 +30,6 @@ class Alumna extends CI_Controller
         //$correo = $this->session->userdata('correo');
 
         //$data['perfil'] = $this->Autenticacion_model->buscarPorCorreo($correo);
-
-        // 1. Estas dos líneas DEBEN estar antes del array $data
-
 
         $resultado_al01 = $this->Alumna_model->AL_01("44444444-4");
         $resultado_al02 = $this->Alumna_model->AL_02();
@@ -100,14 +97,14 @@ class Alumna extends CI_Controller
                 if ($dia['fecha_iso'] === $bloque->fecha) {
                     $fecha_bloque = new DateTime($bloque->fecha);
                     $dia['bloques'][] = [
-                        'id_bloque'        => (int) $bloque->id_bloque,
-                        'id_reserva'       => $bloque->id_reserva_propia ? (int) $bloque->id_reserva_propia : null,   // <- esta línea
-                        'hora_inicio'      => substr($bloque->hora_inicio, 0, 5),
-                        'especialidad'     => $bloque->especialidad,
-                        'profesor_nombre'  => $bloque->profesor_nombre,
-                        'fecha_texto'      => $fecha_bloque->format('d') . ' ' . $meses[(int) $fecha_bloque->format('n')] . ' ' . $fecha_bloque->format('Y'),
-                        'cupos_ocupados'   => (int) $bloque->cupos_ocupados,
-                        'cupos_maximos'    => (int) $bloque->cupos_maximos,
+                        'id_bloque' => (int) $bloque->id_bloque,
+                        'id_reserva' => $bloque->id_reserva_propia ? (int) $bloque->id_reserva_propia : null,   // <- esta línea
+                        'hora_inicio' => substr($bloque->hora_inicio, 0, 5),
+                        'especialidad' => $bloque->especialidad,
+                        'profesor_nombre' => $bloque->profesor_nombre,
+                        'fecha_texto' => $fecha_bloque->format('d') . ' ' . $meses[(int) $fecha_bloque->format('n')] . ' ' . $fecha_bloque->format('Y'),
+                        'cupos_ocupados' => (int) $bloque->cupos_ocupados,
+                        'cupos_maximos' => (int) $bloque->cupos_maximos,
                         'reservado_por_mi' => (bool) $bloque->reservado_por_mi,
                     ];
                     break;
@@ -124,7 +121,7 @@ class Alumna extends CI_Controller
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($payload));
-    }   
+    }
 
 
     public function cancelarReserva()
@@ -152,17 +149,28 @@ class Alumna extends CI_Controller
         $id_bloque = (int) $this->input->post('id_bloque');
 
         if (!$id_bloque) {
-        $this->output->set_status_header(400)
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['success' => false, 'mensaje' => 'Falta id_bloque.']));
-        return;
+            $this->output->set_status_header(400)
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['success' => false, 'mensaje' => 'Falta id_bloque.']));
+            return;
         }
         $resultado = $this->Alumna_model->AL_06($rut_alumna, $id_bloque);
 
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($resultado));
-        
+
+    }
+
+    public function obtener_mis_clases()
+    {
+        //$rut_alumna = $this->session->userdata('rut_alumna');
+        $rut_alumna = "44444444-4";
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(
+                $this->Alumna_model->AL_07($rut_alumna)
+            );
     }
 
     public function rutina()

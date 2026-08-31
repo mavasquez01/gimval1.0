@@ -49,6 +49,7 @@
 <script src="<?= base_url('/assets/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
 <script src="<?= base_url('/assets/sweetalert2/js/sweetalert2@11.js') ?>"></script>
 <script src="<?= base_url('/assets/js/alumna/horarios.js') ?>"></script>
+<script src="<?= base_url('/assets/js/alumna/misclases.js') ?>"></script>
 
 
 </body>

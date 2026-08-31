@@ -27,12 +27,11 @@
                         Próxima Clase
                     </p>
 
-<<<<<<< HEAD
                     <div>
                         <h2 class="text-white mb-1">
                             <?php
-                                $horan = new Datetime($al_01->hora_inicio);
-                             if ($al_01->fecha == date('Y-m-d')) {
+                            $horan = new Datetime($al_01->hora_inicio);
+                            if ($al_01->fecha == date('Y-m-d')) {
                                 echo "Hoy ", $al_01->hora_inicio;
                             } else {
                                 $fecha = new DateTime($al_01->fecha);
@@ -40,28 +39,6 @@
                             }
                             ?>
                         </h2>
-=======
-                    <div class="d-flex justify-content-between align-items-start gap-3">
-
-                        <div>
-                            <h2 class="text-white mb-1">
-                                <?php
-                                if ($al_01->fecha == date('Y-m-d')) {
-                                    echo "Hoy ", $al_01->hora_inicio;
-                                } else {
-                                    $fecha = new DateTime($al_01->fecha);
-                                    echo $fecha->format('d-m-Y'), " ", $al_01->hora_inicio;
-                                }
-                                ?>
-                            </h2>
-
-                            <h5 class="text-white mb-0">
-                                Grupal
-                            </h5>
-                        </div>
-
-                        <i class="bi bi-clock-history text-pink fs-1"></i>
->>>>>>> f788d85d09c63403cab3c8ab710a43416a5dc4d6
 
                     </div>
 
@@ -193,311 +170,16 @@
                 Mis Clases
             </h4>
 
-            <div class="tab-content">
+            <div id="listaClases">
 
-                <!-- PAGINA 1 -->
-                <div class="tab-pane fade show active" id="page1">
-
-                    <!-- CARD 1 -->
-                    <a href="rutina.html">
-                        <div class="schedule-card mb-3">
-
-                            <div class="d-flex justify-content-between">
-
-                                <div>
-                                    <h4 class="fw-bold text-white mb-2">09:00</h4>
-
-                                    <p class="text-white mb-2">
-                                        Funcional - Camila
-                                    </p>
-
-                                    <small class="text-pink">
-                                        12 Mayo 2026
-                                    </small>
-                                </div>
-
-                                <div class="d-flex flex-column justify-content-between align-items-end">
-
-                                    <span class="badge-full">
-                                        COMPLETO
-                                    </span>
-
-                                    <span class="text-pink fw-semibold me-2">
-                                        VER RUTINA
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </a>
-
-                    <!-- CARD 2 -->
-                    <a href="rutina.html">
-                        <div class="schedule-card mb-3">
-
-                            <div class="d-flex justify-content-between">
-
-                                <div>
-                                    <h4 class="fw-bold text-white mb-2">11:00</h4>
-
-                                    <p class="text-white mb-2">
-                                        Spinning - Fernanda
-                                    </p>
-
-                                    <small class="text-pink">
-                                        13 Mayo 2026
-                                    </small>
-                                </div>
-
-                                <div class="d-flex flex-column justify-content-between align-items-end">
-
-                                    <span class="badge-cupos">
-                                        ACTIVA
-                                    </span>
-
-                                    <span class="text-pink fw-semibold me-2">
-                                        VER RUTINA
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </a>
-
-                    <!-- CARD 3 -->
-                    <a href="rutina.html">
-                        <div class="schedule-card mb-3">
-
-                            <div class="d-flex justify-content-between">
-
-                                <div>
-                                    <h4 class="fw-bold text-white mb-2">15:30</h4>
-
-                                    <p class="text-white mb-2">
-                                        GAP - Natalia
-                                    </p>
-
-                                    <small class="text-pink">
-                                        14 Mayo 2026
-                                    </small>
-                                </div>
-
-                                <div class="d-flex flex-column justify-content-between align-items-end">
-
-                                    <span class="badge-cupos">
-                                        ACTIVA
-                                    </span>
-
-                                    <span class="text-pink fw-semibold me-2">
-                                        VER RUTINA
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </a>
-
-                    <!-- CARD 4 -->
-                    <a href="rutina.html">
-                        <div class="schedule-card mb-4">
-
-                            <div class="d-flex justify-content-between">
-
-                                <div>
-                                    <h4 class="fw-bold text-white mb-2">19:00</h4>
-
-                                    <p class="text-white mb-2">
-                                        Cross Training - Camila
-                                    </p>
-
-                                    <small class="text-pink">
-                                        15 Mayo 2026
-                                    </small>
-                                </div>
-
-                                <div class="d-flex flex-column justify-content-between align-items-end">
-
-                                    <span class="badge-full">
-                                        COMPLETO
-                                    </span>
-
-                                    <span class="text-pink fw-semibold me-2">
-                                        VER RUTINA
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </a>
-
-                </div>
-
-                <!-- PAGINA 2 -->
-                <div class="tab-pane fade" id="page2">
-
-                    <a href="rutina.html">
-                        <div class="schedule-card mb-3">
-
-                            <div class="d-flex justify-content-between">
-
-                                <div>
-                                    <h4 class="fw-bold text-white mb-2">08:00</h4>
-
-                                    <p class="text-white mb-2">
-                                        Yoga - Daniela
-                                    </p>
-
-                                    <small class="text-pink">
-                                        18 Mayo 2026
-                                    </small>
-                                </div>
-
-                                <div class="d-flex flex-column justify-content-between align-items-end">
-
-                                    <span class="badge-cupos">
-                                        ACTIVA
-                                    </span>
-
-                                    <span class="text-pink fw-semibold me-2">
-                                        VER RUTINA
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </a>
-
-                    <a href="rutina.html">
-                        <div class="schedule-card mb-3">
-
-                            <div class="d-flex justify-content-between">
-
-                                <div>
-                                    <h4 class="fw-bold text-white mb-2">12:00</h4>
-
-                                    <p class="text-white mb-2">
-                                        Funcional - Camila
-                                    </p>
-
-                                    <small class="text-pink">
-                                        19 Mayo 2026
-                                    </small>
-                                </div>
-
-                                <div class="d-flex flex-column justify-content-between align-items-end">
-
-                                    <span class="badge-full">
-                                        COMPLETO
-                                    </span>
-
-                                    <span class="text-pink fw-semibold me-2">
-                                        VER RUTINA
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </a>
-
-                    <a href="rutina.html">
-                        <div class="schedule-card mb-3">
-
-                            <div class="d-flex justify-content-between">
-
-                                <div>
-                                    <h4 class="fw-bold text-white mb-2">17:00</h4>
-
-                                    <p class="text-white mb-2">
-                                        HIIT - Fernanda
-                                    </p>
-
-                                    <small class="text-pink">
-                                        20 Mayo 2026
-                                    </small>
-                                </div>
-
-                                <div class="d-flex flex-column justify-content-between align-items-end">
-
-                                    <span class="badge-cupos">
-                                        ACTIVA
-                                    </span>
-
-                                    <span class="text-pink fw-semibold me-2">
-                                        VER RUTINA
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </a>
-
-                    <a href="rutina.html">
-                        <div class="schedule-card mb-4">
-
-                            <div class="d-flex justify-content-between">
-
-                                <div>
-                                    <h4 class="fw-bold text-white mb-2">20:30</h4>
-
-                                    <p class="text-white mb-2">
-                                        Spinning - Natalia
-                                    </p>
-
-                                    <small class="text-pink">
-                                        21 Mayo 2026
-                                    </small>
-                                </div>
-
-                                <div class="d-flex flex-column justify-content-between align-items-end">
-
-                                    <span class="badge-full">
-                                        COMPLETO
-                                    </span>
-
-                                    <span class="text-pink fw-semibold me-2">
-                                        VER RUTINA
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </a>
-
+                <div class="text-center text-white">
+                    Cargando clases...
                 </div>
 
             </div>
 
-            <!-- PAGINATION -->
-            <ul class="nav nav-tabs border-0 justify-content-center" role="tablist">
-                <li class="nav-item">
-                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#page1" type="button">
-                        1
-                    </button>
-                </li>
-
-                <li class="nav-item">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#page2" type="button">
-                        2
-                    </button>
-                </li>
-
-            </ul>
+            <div id="paginacionClases" class="d-flex justify-content-center mt-3">
+            </div>
 
         </div>
 
@@ -508,7 +190,7 @@
                 <div class="d-flex align-items-center mb-4">
 
                     <img src="<?= base_url('/assets/images/alumna1.jpg') ?>" alt="Foto de perfil"
-                        class="profile-avatar me-3">
+                        class="profile-avatar m-auto">
 
                     <div>
 
@@ -557,13 +239,13 @@
                 </div>
 
                 <div class="schedule-card mb-2">
-                    <a href="cambiarContraseña.html" class="d-flex align-items-center text-white">
+                    <a href="<?= site_url('alumna/cambiarContrasenia') ?>" class="d-flex align-items-center text-white">
                         <i class="bi bi-key me-3 text-pink"></i>
                         Cambiar contraseña
                     </a>
                 </div>
                 <div class="schedule-card mb-2">
-                    <a href="convenios.html" class="d-flex align-items-center text-white">
+                    <a href=""<?= site_url('alumna/convenios') ?>"" class="d-flex align-items-center text-white">
                         <i class="bi bi-person me-3 text-pink"></i>
                         Ver Convenios
                     </a>
