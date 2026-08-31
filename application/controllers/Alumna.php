@@ -204,12 +204,142 @@ class Alumna extends CI_Controller
         $this->load->view('template/alumna/convenios/footer');
     }
 
-    public function cambiarContrasenia()
+    public function cambiarContrasena()
     {
+        $idUsuario = $this->session->userdata('id_usuario');
 
-        $this->load->view('template/alumna/cambiarContraseña/header');
-        $this->load->view('alumna/cambiarContraseña');
-        $this->load->view('template/alumna/cambiarContraseña/footer');
+        if (!$idUsuario) {
+            redirect('autenticacion');
+            return;
+        }
+
+        $this->load->view('template/alumna/cambiarContrasena/header');
+        $this->load->view('alumna/cambiarContrasena');
+        $this->load->view('template/alumna/cambiarContrasena/footer');
+    }
+
+    public function guardarContrasena()
+    {
+        $idUsuario = $this->session->userdata('id_usuario');
+
+        if (!$idUsuario) {
+            redirect('autenticacion');
+            return;
+        }
+
+        // Validaciones
+        $this->form_validation->set_rules(
+            'contrasena_actual',
+            'Contraseña actual',
+            'required',
+            [
+                'required' => 'Debes ingresar tu contraseña actual.'
+            ]
+        );
+
+        $this->form_validation->set_rules(
+            'nueva_contrasena',
+            'Nueva contraseña',
+            'required|min_length[8]',
+            [
+                'required' => 'Debes ingresar una nueva contraseña.',
+                'min_length' => 'La nueva contraseña debe tener al menos 8 caracteres.'
+            ]
+        );
+
+        $this->form_validation->set_rules(
+            'confirmar_contrasena',
+            'Confirmar contraseña',
+            'required|matches[nueva_contrasena]',
+            [
+                'required' => 'Debes confirmar la nueva contraseña.',
+                'matches' => 'Las contraseñas no coinciden.'
+            ]
+        );
+
+        // Si las validaciones fallan
+        if ($this->form_validation->run() == FALSE) {
+
+            $this->session->set_flashdata('alerta_contrasena', [
+                'icon' => 'warning',
+                'title' => 'Revisa tus datos',
+                'text' => strip_tags(validation_errors("\n", "\n"))
+            ]);
+
+            redirect('alumna/cambiarContrasena');
+            return;
+        }
+
+        // Obtenemos los datos enviados
+        $contrasenaActual = $this->input->post('contrasena_actual');
+        $nuevaContrasena = $this->input->post('nueva_contrasena');
+
+        // Buscamos el usuario
+        $usuario = $this->Autenticacion_model->buscarPorId($idUsuario);
+
+        if (!$usuario) {
+            redirect('autenticacion');
+            return;
+        }
+
+        // Comprobamos que la contraseña actual sea correcta
+        if (!password_verify($contrasenaActual, $usuario->contrasena_hash)) {
+
+            $this->session->set_flashdata('alerta_contrasena', [
+                'icon' => 'error',
+                'title' => 'Contraseña incorrecta',
+                'text' => 'La contraseña actual no es correcta.'
+            ]);
+
+            redirect('alumna/cambiarContrasena');
+            return;
+        }
+
+        // Evitamos usar la misma contraseña actual
+        if (password_verify($nuevaContrasena, $usuario->contrasena_hash)) {
+
+            $this->session->set_flashdata('alerta_contrasena', [
+                'icon' => 'warning',
+                'title' => 'Contraseña no válida',
+                'text' => 'La nueva contraseña no puede ser igual a la actual.'
+            ]);
+
+            redirect('alumna/cambiarContrasena');
+            return;
+        }
+
+        // Generamos el nuevo hash
+        $hash = password_hash(
+            $nuevaContrasena,
+            PASSWORD_DEFAULT
+        );
+
+        // Actualizamos la contraseña
+        $resultado = $this->Alumna_model->cambiarContrasena(
+            $idUsuario,
+            $hash
+        );
+
+        if (!$resultado) {
+
+            $this->session->set_flashdata('alerta_contrasena', [
+                'icon' => 'error',
+                'title' => 'Error',
+                'text' => 'No se pudo actualizar la contraseña.'
+            ]);
+
+            redirect('alumna/cambiarContrasena');
+            return;
+        }
+
+        // Todo salió correctamente
+        $this->session->set_flashdata('alerta_contrasena', [
+            'icon' => 'success',
+            'title' => 'Contraseña actualizada',
+            'text' => 'Tu contraseña fue actualizada correctamente.'
+        ]);
+
+        redirect('alumna/cambiarContrasena');
     }
 
     public function cerrarSesion()
@@ -218,4 +348,6 @@ class Alumna extends CI_Controller
 
         redirect('autenticacion');
     }
+
+
 }

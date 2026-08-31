@@ -239,7 +239,7 @@
                 </div>
 
                 <div class="schedule-card mb-2">
-                    <a href="<?= site_url('alumna/cambiarContrasenia') ?>" class="d-flex align-items-center text-white">
+                    <a href="<?= site_url('alumna/cambiarContrasena') ?>" class="d-flex align-items-center text-white">
                         <i class="bi bi-key me-3 text-pink"></i>
                         Cambiar contraseña
                     </a>

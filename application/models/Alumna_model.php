@@ -400,6 +400,15 @@ class Alumna_model extends CI_Model
 
         return $query->row();
     }
+
+    public function cambiarContrasena($idUsuario, $hash)
+    {
+        $this->db->where('id_usuario', $idUsuario);
+
+        return $this->db->update('usuario', [
+            'contrasena_hash' => $hash
+        ]);
+    }
 }
 
 
