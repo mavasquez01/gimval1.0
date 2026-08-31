@@ -82,26 +82,43 @@ class Autenticacion extends CI_Controller
         $correo = $this->input->post('correo');
         $contrasena = $this->input->post('contrasena');
 
-        // Buscamos al usuario en la base de datos
+        // Buscamos al usuario por su email
         $usuario = $this->Autenticacion_model->buscarPorCorreo($correo);
 
         // Verificamos que el usuario exista
         if ($usuario) {
 
-            // Verificamos la contraseña ingresada contra el hash de la BD
-            if (password_verify($contrasena, $usuario->contraseña)) {
+            // Comparamos la contraseña con contrasena_hash
+            if (password_verify($contrasena, $usuario->contrasena_hash)) {
 
+                // Guardamos los datos generales del usuario en sesión
                 $this->session->set_userdata([
-                    'rut' => $usuario->rut,
-                    'nombre' => $usuario->nombre,
-                    'apellido' => $usuario->apellido,
-                    'edad' => $usuario->edad,
-                    'correo' => $usuario->correo,
-                    'rol' => $usuario->rol,
+                    'id_usuario' => $usuario->id_usuario,
+                    'correo' => $usuario->email,
+                    'id_rol' => $usuario->id_rol,
                     'logueado' => TRUE
                 ]);
 
-                redirect('alumna');
+                // Redirección dependiendo del rol
+                switch ($usuario->id_rol) {
+
+                    case 1:
+                        redirect('alumna');
+                        break;
+
+                    case 2:
+                        redirect('profesor');
+                        break;
+
+                    case 3:
+                        redirect('administrador');
+                        break;
+
+                    default:
+                        $this->session->sess_destroy();
+                        redirect('autenticacion');
+                        break;
+                }
 
             } else {
 

@@ -9,7 +9,7 @@
             <section class="mb-4">
                 <h4 class="text-white mb-1">
                     ¡Hola,
-                    <?= html_escape($this->session->userdata('nombre')) ?>!
+                    <?= html_escape($perfil->nombre) ?>!
                 </h4>
 
                 <p class="text-secondary mb-0">
@@ -18,76 +18,77 @@
             </section>
 
             <?php if ($al_01): ?>
-                 <!-- Próxima clase -->
-            <section class="plan-card">
+                <!-- Próxima clase -->
+                <section class="plan-card">
 
-            
 
-                <p class="text-secondary mb-2">
-                    Próxima Clase
-                </p>
 
-                <div class="d-flex justify-content-between align-items-start gap-3">
+                    <p class="text-secondary mb-2">
+                        Próxima Clase
+                    </p>
 
-                    <div>
-                        <h2 class="text-white mb-1">
-                            <?php
-                             if ($al_01->fecha == date('Y-m-d')) {
-                                echo "Hoy ", $al_01->hora_inicio;
-                            } else {
-                                $fecha = new DateTime($al_01->fecha);
-                                echo $fecha->format('d-m-Y'), " ", $al_01->hora_inicio;
-                            }
-                            ?>
-                        </h2>
+                    <div class="d-flex justify-content-between align-items-start gap-3">
 
-                        <h5 class="text-white mb-0">
-                            Grupal
-                        </h5>
+                        <div>
+                            <h2 class="text-white mb-1">
+                                <?php
+                                if ($al_01->fecha == date('Y-m-d')) {
+                                    echo "Hoy ", $al_01->hora_inicio;
+                                } else {
+                                    $fecha = new DateTime($al_01->fecha);
+                                    echo $fecha->format('d-m-Y'), " ", $al_01->hora_inicio;
+                                }
+                                ?>
+                            </h2>
+
+                            <h5 class="text-white mb-0">
+                                Grupal
+                            </h5>
+                        </div>
+
+                        <i class="bi bi-clock-history text-pink fs-1"></i>
+
                     </div>
 
-                    <i class="bi bi-clock-history text-pink fs-1"></i>
+                    <hr class="class-divider">
 
-                </div>
+                    <div class="d-flex justify-content-between align-items-center">
 
-                <hr class="class-divider">
+                        <p class="text-secondary mb-0">
+                            Profesora
+                        </p>
 
-                <div class="d-flex justify-content-between align-items-center">
+                        <p class="text-white text-end mb-0">
+                            <?= $al_01->nombre ?>
+                        </p>
 
-                    <p class="text-secondary mb-0">
-                        Profesora
-                    </p>
+                    </div>
 
-                    <p class="text-white text-end mb-0">
-                        <?= $al_01->nombre ?>
-                    </p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
 
-                </div>
+                        <p class="text-secondary mb-0">
+                            Clases Restantes
+                        </p>
 
-                <div class="d-flex justify-content-between align-items-center mt-3">
+                        <p class="text-white text-end mb-0">
+                            <span class="text-pink fw-bold"><?= $al_03->clases_restantes ?></span> de
+                            <?= $al_03->total_clases ?>
+                        </p>
 
-                    <p class="text-secondary mb-0">
-                        Clases Restantes
-                    </p>
+                    </div>
 
-                    <p class="text-white text-end mb-0">
-                        <span class="text-pink fw-bold"><?= $al_03->clases_restantes ?></span> de <?= $al_03->total_clases ?>
-                    </p>
+                    <div class="text-center mt-4">
+                        <a href="#" class="btn btn-outline-primary rounded-pill w-auto">
+                            Ver horarios
+                        </a>
+                    </div>
 
-                </div>
-
-                <div class="text-center mt-4">
-                    <a href="#" class="btn btn-outline-primary rounded-pill w-auto">
-                        Ver horarios
-                    </a>
-                </div>
-
-            </section>
+                </section>
             <?php else: ?>
                 <p class="text-secondary text-center">No tienes clases próximas agendadas.</p>
             <?php endif; ?>
 
-           
+
 
             <div class="mt-4">
 
@@ -101,75 +102,75 @@
                     $dia = $date->format('l');
                     $horadb = $clase->hora_inicio;
                     $hora = new DateTime($horadb);
-                ?>
-                
+                    ?>
 
-                        <div class="schedule-card mb-2">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h5 class="text-white mb-1">    
+
+                    <div class="schedule-card mb-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="text-white mb-1">
                                     <?php
-                                        switch ($dia) {
+                                    switch ($dia) {
                                         case 'Monday':
-                                            echo "Lun ",$hora->format('H:i');
+                                            echo "Lun ", $hora->format('H:i');
                                             break;
                                         case 'Tuesday':
-                                            echo "Mar ",$hora->format('H:i');
+                                            echo "Mar ", $hora->format('H:i');
                                             break;
                                         case 'Wednesday':
-                                            echo "Mier ",$hora->format('H:i');
+                                            echo "Mier ", $hora->format('H:i');
                                             break;
                                         case 'Thursday':
-                                            echo "Jue ",$hora->format('H:i');
+                                            echo "Jue ", $hora->format('H:i');
                                             break;
                                         case 'Friday':
-                                            echo "Vie ",$hora->format('H:i');
+                                            echo "Vie ", $hora->format('H:i');
                                             break;
                                         case 'Saturday':
-                                            echo "Sab ",$hora->format('H:i');
+                                            echo "Sab ", $hora->format('H:i');
                                             break;
                                         default:
-                                            echo $clase->fecha," ",$hora->format('H:i');
+                                            echo $clase->fecha, " ", $hora->format('H:i');
                                             break;
                                     }
                                     ?>
-                                    </h5>
-                                </div>
-
-                                <small class="text-pink">
-                                    Prof. <?= $clase->nombre ?>
-                                </small>
+                                </h5>
                             </div>
-                        </div>
 
-                <?php
-                    }
-                    ?>
+                            <small class="text-pink">
+                                Prof. <?= $clase->nombre ?>
+                            </small>
+                        </div>
+                    </div>
+
+                    <?php
+                }
+                ?>
 
             </div>
 
         </section>
 
         <!-- Agenda -->
-<section class="tab-pane fade" id="agenda" role="tabpanel" aria-labelledby="agenda-tab">
+        <section class="tab-pane fade" id="agenda" role="tabpanel" aria-labelledby="agenda-tab">
 
-    <div class="container-fluid px-4" style="max-width: 420px;">
+            <div class="container-fluid px-4" style="max-width: 420px;">
 
-        <div class="text-center mb-4">
-            <p class="text-secondary mb-3" id="agenda-texto-semana">Cargando semana...</p>
+                <div class="text-center mb-4">
+                    <p class="text-secondary mb-3" id="agenda-texto-semana">Cargando semana...</p>
 
-            <ul class="nav nav-tabs border-0 justify-content-between" id="dias-tab" role="tablist">
-                <!-- generado por JS -->
-            </ul>
-        </div>
+                    <ul class="nav nav-tabs border-0 justify-content-between" id="dias-tab" role="tablist">
+                        <!-- generado por JS -->
+                    </ul>
+                </div>
 
-        <div class="tab-content mt-4" id="dias-tab-content">
-            <!-- generado por JS -->
-        </div>
+                <div class="tab-content mt-4" id="dias-tab-content">
+                    <!-- generado por JS -->
+                </div>
 
-    </div>
+            </div>
 
-</section>
+        </section>
         <!-- Clases -->
         <div class="tab-pane fade px-4" id="clases">
 
@@ -491,19 +492,20 @@
 
                 <div class="d-flex align-items-center mb-4">
 
-                    <img src="<?= base_url('/assets/images/alumna1.jpg') ?>" alt="Foto de perfil" class="profile-avatar me-3">
+                    <img src="<?= base_url('/assets/images/alumna1.jpg') ?>" alt="Foto de perfil"
+                        class="profile-avatar me-3">
 
                     <div>
 
                         <?php if ($perfil): ?>
 
                             <h5 class="text-white mb-1">
-                                <?= ($perfil->nombre) ?>
-                                <?= ($perfil->apellido) ?>
+                                <?= html_escape($perfil->nombre) ?>
+                                <?= html_escape($perfil->apellido) ?>
                             </h5>
 
                             <p class="text-secondary mb-0">
-                                <?= ($perfil->correo) ?>
+                                <?= html_escape($this->session->userdata('correo')) ?>
                             </p>
 
                         <?php endif; ?>
