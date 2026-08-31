@@ -98,6 +98,7 @@ class Alumna extends CI_Controller
                     $fecha_bloque = new DateTime($bloque->fecha);
                     $dia['bloques'][] = [
                         'id_bloque'        => (int) $bloque->id_bloque,
+                        'id_reserva'       => $bloque->id_reserva_propia ? (int) $bloque->id_reserva_propia : null,   // <- esta línea
                         'hora_inicio'      => substr($bloque->hora_inicio, 0, 5),
                         'especialidad'     => $bloque->especialidad,
                         'profesor_nombre'  => $bloque->profesor_nombre,
@@ -121,23 +122,44 @@ class Alumna extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($payload));
     }   
+
+
     public function cancelarReserva()
     {
-    $rut_alumna = "44444444-4"; // TODO: reemplazar por sesión real
-    $id_reserva = (int) $this->input->post('id_reserva');
+        $rut_alumna = "44444444-4"; // TODO: reemplazar por sesión real
+        $id_reserva = (int) $this->input->post('id_reserva');
 
-    if (!$id_reserva) {
-        $this->output->set_status_header(400)
+        if (!$id_reserva) {
+            $this->output->set_status_header(400)
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['success' => false, 'mensaje' => 'Falta id_reserva.']));
+            return;
+        }
+
+        $resultado = $this->Alumna_model->AL_05($rut_alumna, $id_reserva);
+
+        $this->output
             ->set_content_type('application/json')
-            ->set_output(json_encode(['success' => false, 'mensaje' => 'Falta id_reserva.']));
-        return;
+            ->set_output(json_encode($resultado));
     }
 
-    $resultado = $this->Alumna_model->AL_05($rut_alumna, $id_reserva);
+    public function crearReserva()
+    {
+        $rut_alumna = "44444444-4";
+        $id_bloque = (int) $this->input->post('id_bloque');
 
-    $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($resultado));
+        if (!$id_bloque) {
+        $this->output->set_status_header(400)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['success' => false, 'mensaje' => 'Falta id_bloque.']));
+        return;
+        }
+        $resultado = $this->Alumna_model->AL_06($rut_alumna, $id_bloque);
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($resultado));
+        
     }
 
     public function rutina()

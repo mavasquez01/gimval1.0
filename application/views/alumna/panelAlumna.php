@@ -32,11 +32,12 @@
                     <div>
                         <h2 class="text-white mb-1">
                             <?php
+                                $horan = new Datetime($al_01->hora_inicio);
                              if ($al_01->fecha == date('Y-m-d')) {
                                 echo "Hoy ", $al_01->hora_inicio;
                             } else {
                                 $fecha = new DateTime($al_01->fecha);
-                                echo $fecha->format('d-m-Y'), " ", $al_01->hora_inicio;
+                                echo $fecha->format('d-m-Y'), " ", $horan->format('H:i');
                             }
                             ?>
                         </h2>
@@ -173,7 +174,7 @@
         <!-- Clases -->
         <div class="tab-pane fade px-4" id="clases">
 
-            <h4 class="text-white mb-4 text-center">
+            <h4 class="text-white mb-3 text-center">
                 Mis Clases
             </h4>
 
