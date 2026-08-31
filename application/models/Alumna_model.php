@@ -1,10 +1,22 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Alumna_model extends CI_Model {
+class Alumna_model extends CI_Model
+{
+
+    // Obtener datos de la alumna
+    public function obtenerAlumnaPorId($idUsuario)
+    {
+        $this->db->where('id_usuario', $idUsuario);
+
+        $query = $this->db->get('alumna');
+
+        return $query->row();
+    }
 
     //Obtener Proxima Clase
-    public function AL_01($alumna) {
+    public function AL_01($alumna)
+    {
         return $this->ejecutar_sp("CALL AL_01(?)", [$alumna]);
     }
     //Obtener proximas clases vista rapida
@@ -14,9 +26,9 @@ class Alumna_model extends CI_Model {
     //Obteneer clases restantes vista rapida
     public function AL_03($alumna){
         $sql = "SELECT pa.clases_restantes AS clases_restantes, p.cantidad_clases AS total_clases "
-                . "FROM plan_alumna AS pa "
-                . "JOIN plan AS p ON p.id_plan = pa.id_plan "
-                . "WHERE rut_alumna = ?;";
+            . "FROM plan_alumna AS pa "
+            . "JOIN plan AS p ON p.id_plan = pa.id_plan "
+            . "WHERE rut_alumna = ?;";
         return $this->db->query($sql, [$alumna])->row();
     }
     //Obtener horario
@@ -37,42 +49,43 @@ class Alumna_model extends CI_Model {
     } 
     
     //Cancelar reserva
-    public function AL_05($alumna, $id_reserva) {
-    $reserva = $this->db->query(
-        "SELECT r.id_reserva, pa.id_plan_alumna "
-        . "FROM reserva AS r "
-        . "LEFT JOIN plan_alumna AS pa ON pa.rut_alumna = r.rut_alumna AND pa.id_estado_plan = 1 "
-        . "WHERE r.id_reserva = ? AND r.rut_alumna = ? AND r.vigente = 1 "
-        . "LIMIT 1",
-        [$id_reserva, $alumna]
-    )->row();
+     function AL_05($alumna, $id_reserva)
+    {
+        $reserva = $this->db->query(
+            "SELECT r.id_reserva, pa.id_plan_alumna "
+            . "FROM reserva AS r "
+            . "LEFT JOIN plan_alumna AS pa ON pa.rut_alumna = r.rut_alumna AND pa.id_estado_plan = 1 "
+            . "WHERE r.id_reserva = ? AND r.rut_alumna = ? AND r.vigente = 1 "
+            . "LIMIT 1",
+            [$id_reserva, $alumna]
+        )->row();
 
-    if (!$reserva) {
-        return ['success' => false, 'mensaje' => 'La reserva no existe, ya fue cancelada, o no te pertenece.'];
+        if (!$reserva) {
+            return ['success' => false, 'mensaje' => 'La reserva no existe, ya fue cancelada, o no te pertenece.'];
+        }
+
+        $this->db->trans_start();
+
+        $this->db->query("UPDATE reserva SET vigente = 0 WHERE id_reserva = ?", [$id_reserva]);
+
+        if ($reserva->id_plan_alumna) {
+            $this->db->query(
+                "UPDATE plan_alumna SET clases_restantes = clases_restantes + 1 WHERE id_plan_alumna = ?",
+                [$reserva->id_plan_alumna]
+            );
+        }
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            return ['success' => false, 'mensaje' => 'No se pudo cancelar la reserva. Intenta de nuevo.'];
+        }
+
+        return ['success' => true, 'mensaje' => 'Reserva cancelada correctamente.'];
     }
 
-    $this->db->trans_start();
-
-    $this->db->query("UPDATE reserva SET vigente = 0 WHERE id_reserva = ?", [$id_reserva]);
-
-    if ($reserva->id_plan_alumna) {
-        $this->db->query(
-            "UPDATE plan_alumna SET clases_restantes = clases_restantes + 1 WHERE id_plan_alumna = ?",
-            [$reserva->id_plan_alumna]
-        );
-    }
-
-    $this->db->trans_complete();
-
-    if ($this->db->trans_status() === FALSE) {
-        return ['success' => false, 'mensaje' => 'No se pudo cancelar la reserva. Intenta de nuevo.'];
-    }
-
-    return ['success' => true, 'mensaje' => 'Reserva cancelada correctamente.'];
-    } 
 
     //Hacer Reserva 
-
     public function AL_06($alumna, $bloque)
         {
            
@@ -245,7 +258,8 @@ class Alumna_model extends CI_Model {
             
 
 
-    private function ejecutar_sp($sql, $params = []) {
+    private function ejecutar_sp($sql, $params = [])
+    {
         $db_debug = $this->db->db_debug;
         $this->db->db_debug = false;
 
@@ -279,7 +293,8 @@ class Alumna_model extends CI_Model {
         ];
     }
 
-    private function limpiar_resultados_sp() {
+    private function limpiar_resultados_sp()
+    {
         while ($this->db->conn_id->more_results() && $this->db->conn_id->next_result()) {
             if ($res = $this->db->conn_id->store_result()) {
                 $res->free();
