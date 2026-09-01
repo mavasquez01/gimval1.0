@@ -195,6 +195,187 @@ class Alumna extends CI_Controller
         $this->load->view('template/alumna/modificarDatos/footer');
     }
 
+    public function actualizarDatos()
+    {
+        $idUsuario = $this->session->userdata('id_usuario');
+
+        if (!$idUsuario) {
+            redirect('autenticacion');
+            return;
+        }
+
+        // Validar nombre
+        $this->form_validation->set_rules(
+            'nombre',
+            'Nombre',
+            'required|trim|min_length[2]|max_length[60]|regex_match[/^[A-Za-zÁÉÍÓÚáéíóúÑñÜü ]+$/]',
+            [
+                'required' => 'Debes ingresar tu nombre.',
+                'min_length' => 'El nombre debe tener al menos 2 caracteres.',
+                'max_length' => 'El nombre no puede superar los 60 caracteres.',
+                'regex_match' => 'El nombre solo puede contener letras y espacios.'
+            ]
+        );
+
+        // Validar apellido
+        $this->form_validation->set_rules(
+            'apellido',
+            'Apellido',
+            'required|trim|min_length[2]|max_length[60]|regex_match[/^[A-Za-zÁÉÍÓÚáéíóúÑñÜü ]+$/]',
+            [
+                'required' => 'Debes ingresar tu apellido.',
+                'min_length' => 'El apellido debe tener al menos 2 caracteres.',
+                'max_length' => 'El apellido no puede superar los 60 caracteres.',
+                'regex_match' => 'El apellido solo puede contener letras y espacios.'
+            ]
+        );
+
+        // Validar correo
+        $this->form_validation->set_rules(
+            'correo',
+            'Correo electrónico',
+            'required|trim|valid_email',
+            [
+                'required' => 'Debes ingresar tu correo electrónico.',
+                'valid_email' => 'Debes ingresar un correo electrónico válido.'
+            ]
+        );
+
+        // Validar fecha
+        $this->form_validation->set_rules(
+            'fecha_nacimiento',
+            'Fecha de nacimiento',
+            'required|trim|callback_validarFechaNacimiento'
+        );
+
+        // Validar teléfono
+        $this->form_validation->set_rules(
+            'telefono',
+            'Teléfono',
+            'required|trim|regex_match[/^\+?[0-9]{8,15}$/]',
+            [
+                'required' => 'Debes ingresar tu teléfono.',
+                'regex_match' => 'El teléfono debe contener entre 8 y 15 números.'
+            ]
+        );
+
+        // Ejecutar todas las validaciones
+        if ($this->form_validation->run() == FALSE) {
+
+            $this->session->set_flashdata('alerta_datos', [
+                'icon' => 'warning',
+                'title' => 'Revisa tus datos',
+                'text' => strip_tags(validation_errors("\n", "\n"))
+            ]);
+
+            redirect('alumna/modificarDatos');
+            return;
+        }
+
+        // Obtener correo
+        $correo = $this->input->post('correo', TRUE);
+
+        // Revisar que el correo no pertenezca a otro usuario
+        $correoExistente = $this->Autenticacion_model
+            ->buscarPorCorreoExceptoUsuario($correo, $idUsuario);
+
+        if ($correoExistente) {
+
+            $this->session->set_flashdata('alerta_datos', [
+                'icon' => 'warning',
+                'title' => 'Correo ya registrado',
+                'text' => 'El correo ingresado ya pertenece a otro usuario.'
+            ]);
+
+            redirect('alumna/modificarDatos');
+            return;
+        }
+
+        // Datos de la tabla alumna
+        $datos = [
+            'nombre' => $this->input->post('nombre', TRUE),
+            'apellido' => $this->input->post('apellido', TRUE),
+            'telefono' => $this->input->post('telefono', TRUE),
+            'fecha_nacimiento' => $this->input->post('fecha_nacimiento', TRUE)
+        ];
+
+        // Actualizar datos personales
+        $resultadoDatos = $this->Alumna_model->actualizarDatos(
+            $idUsuario,
+            $datos
+        );
+
+        // Actualizar correo en usuario
+        $resultadoCorreo = $this->Autenticacion_model->actualizarCorreo(
+            $idUsuario,
+            $correo
+        );
+
+        if (!$resultadoDatos || !$resultadoCorreo) {
+
+            $this->session->set_flashdata('alerta_datos', [
+                'icon' => 'error',
+                'title' => 'Error',
+                'text' => 'No se pudieron actualizar tus datos.'
+            ]);
+
+            redirect('alumna/modificarDatos');
+            return;
+        }
+
+        // Actualizamos también el correo guardado en sesión
+        $this->session->set_userdata('correo', $correo);
+
+        $this->session->set_flashdata('alerta_datos', [
+            'icon' => 'success',
+            'title' => 'Datos actualizados',
+            'text' => 'Tus datos fueron actualizados correctamente.'
+        ]);
+
+        redirect('alumna/modificarDatos');
+    }
+
+    public function validarFechaNacimiento($fecha)
+    {
+        $fechaObjeto = DateTime::createFromFormat('Y-m-d', $fecha);
+
+        if (!$fechaObjeto || $fechaObjeto->format('Y-m-d') !== $fecha) {
+
+            $this->form_validation->set_message(
+                'validarFechaNacimiento',
+                'La fecha de nacimiento no es válida.'
+            );
+
+            return false;
+        }
+
+        $hoy = new DateTime();
+
+        if ($fechaObjeto > $hoy) {
+
+            $this->form_validation->set_message(
+                'validarFechaNacimiento',
+                'La fecha de nacimiento no puede ser futura.'
+            );
+
+            return false;
+        }
+
+        $edad = $hoy->diff($fechaObjeto)->y;
+
+        if ($edad < 14 || $edad > 100) {
+
+            $this->form_validation->set_message(
+                'validarFechaNacimiento',
+                'La fecha de nacimiento ingresada no es válida.'
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
     public function convenios()
     {
         $data['convenios'] = $this->Alumna_model->AL_08();

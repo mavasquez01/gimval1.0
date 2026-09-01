@@ -409,6 +409,13 @@ class Alumna_model extends CI_Model
             'contrasena_hash' => $hash
         ]);
     }
+
+    public function actualizarDatos($idUsuario, $datos)
+    {
+        $this->db->where('id_usuario', $idUsuario);
+
+        return $this->db->update('alumna', $datos);
+    }
 }
 
 
