@@ -1,41 +1,54 @@
 <!-- Bottom Navigation -->
-    <div class="mobile-nav">
+<nav class="mobile-nav" aria-label="Navegación inferior">
 
-        <ul class="nav nav-tabs d-flex justify-content-between text-center m-0 w-100" role="tablist">
+    <ul class="nav nav-tabs d-flex justify-content-between text-center m-0 w-100" id="dashboardTabs" role="tablist">
+        <li class="nav-item flex-fill p-0" role="presentation">
+            <button class="nav-link active" id="inicio-tab" data-bs-toggle="tab" data-bs-target="#inicio" type="button"
+                role="tab" aria-controls="inicio" aria-selected="true">
 
-            <li class="nav-item flex-fill p-0">
-                <a href="panelAlumna.html" class="nav-link w-100">
-                    <i class="bi bi-house-door-fill d-block mb-1"></i>
-                    <small>Inicio</small>
-                </a>
-            </li>
+                <i class="bi bi-house-door-fill d-block mb-1"></i>
+                <small>Inicio</small>
 
-            <li class="nav-item flex-fill p-0">
-                <a href="panelAlumna.html" class="nav-link w-100">
-                    <i class="bi bi-calendar-event d-block mb-1"></i>
-                    <small>Agenda</small>
-                </a>
-            </li>
+            </button>
+        </li>
 
-            <li class="nav-item flex-fill p-0">
-                <a href="panelAlumna.html" class="nav-link active w-100">
-                    <i class="bi bi-grid d-block mb-1"></i>
-                    <small>Clases</small>
-                </a>
-            </li>
+        <li class="nav-item flex-fill p-0" role="presentation">
+            <button class="nav-link" id="agenda-tab" data-bs-toggle="tab" data-bs-target="#agenda" type="button"
+                role="tab" aria-controls="agenda" aria-selected="false">
 
-            <li class="nav-item flex-fill p-0">
-                <a href="panelAlumna.html" class="nav-link w-100">
-                    <i class="bi bi-person d-block mb-1"></i>
-                    <small>Perfil</small>
-                </a>
-            </li>
+                <i class="bi bi-calendar-event d-block mb-1"></i>
+                <small>Agendar</small>
 
-        </ul>
+            </button>
+        </li>
 
-    </div>
+        <li class="nav-item flex-fill p-0" role="presentation">
+            <button class="nav-link" id="clases-tab" data-bs-toggle="tab" data-bs-target="#clases" type="button"
+                role="tab" aria-controls="clases" aria-selected="false">
 
-    <script src="<?= base_url('/assets/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
+                <i class="bi bi-grid d-block mb-1"></i>
+                <small>Clases</small>
+
+            </button>
+        </li>
+
+        <li class="nav-item flex-fill p-0" role="presentation">
+            <button class="nav-link" id="perfiL-tab" data-bs-toggle="tab" data-bs-target="#perfil" type="button"
+                role="tab" aria-controls="perfil" aria-selected="false">
+
+                <i class="bi bi-person-square d-block mb-1"></i>
+                <small>Perfil</small>
+
+            </button>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<script src="<?= base_url('/assets/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
+<script src="<?= base_url('/assets/js/alumna/rutinas.js') ?>"></script>
 
 </body>
 

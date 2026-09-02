@@ -173,14 +173,95 @@ class Alumna extends CI_Controller
             );
     }
 
-    public function rutina()
-    {
-
+    public function rutina() {
         $this->load->view('template/alumna/rutina/header');
         $this->load->view('alumna/rutina');
         $this->load->view('template/alumna/rutina/footer');
     }
 
+    public function obtener_rutina()
+    {
+        $id_rutina = $this->input->get('id_rutina');
+
+        if (!$id_rutina || !is_numeric($id_rutina)) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode([
+                    'success' => false,
+                    'message' => 'id_rutina inválido o no enviado.'
+                ]));
+        }
+
+        // AJUSTA esto a como guardas la sesión de la alumna logueada
+        //$rut_alumna = $this->session->userdata('rut_alumna');
+        $rut_alumna = "44444444-4";
+
+        if (!$rut_alumna) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode([
+                    'success' => false,
+                    'message' => 'Sesión no válida.'
+                ]));
+        }
+
+        $this->load->model('Rutina_model');
+
+        $rutina = $this->Rutina_model->obtener_rutina($id_rutina);
+
+        if (!$rutina || !$rutina->vigente) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode([
+                    'success' => false,
+                    'message' => 'Rutina no encontrada o no vigente.'
+                ]));
+        }
+
+        $ejercicios = $this->Rutina_model->obtener_ejercicios($id_rutina, $rut_alumna);
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode([
+                'success' => true,
+                'rutina' => $rutina,
+                'ejercicios' => $ejercicios
+            ]));
+    }
+
+    public function guardar_progreso()
+    {
+        //$rut_alumna = $this->session->userdata('rut_alumna');
+        $rut_alumna = "44444444-4"; // AJUSTA según tu sesión
+
+        if (!$rut_alumna) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['success' => false, 'message' => 'Sesión no válida.']));
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        $ejercicios = $input['ejercicios'] ?? [];
+
+        if (empty($ejercicios)) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['success' => false, 'message' => 'No se recibieron ejercicios.']));
+        }
+
+        $this->load->model('Rutina_model');
+        $hoy = date('Y-m-d');
+
+        foreach ($ejercicios as $ej) {
+            if (!isset($ej['id_ejercicio'], $ej['peso']))
+                continue;
+            $this->Rutina_model->guardar_peso($rut_alumna, $ej['id_ejercicio'], $ej['peso'], $hoy);
+        }
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['success' => true]));
+    }
     public function modificarDatos()
     {
 

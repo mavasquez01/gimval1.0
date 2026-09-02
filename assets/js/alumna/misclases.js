@@ -2,10 +2,18 @@
 let todasLasClases = [];
 let paginaActual = 1;
 const clasesPorPagina = 3;
+let clasesYaCargadas = false; // evita recargar innecesariamente cada vez que se abre la pestaña
 
 async function cargarMisClases() {
     const contenedor = document.getElementById("listaClases");
     const paginacion = document.getElementById("paginacionClases");
+
+    contenedor.innerHTML = `
+        <div class="text-center text-white">
+            Cargando clases...
+        </div>
+    `;
+    if (paginacion) paginacion.innerHTML = "";
 
     try {
         const response = await fetch(BASE_URL + "alumna/obtener_mis_clases");
@@ -22,13 +30,13 @@ async function cargarMisClases() {
                     <p>No se pudieron cargar tus clases.</p>
                 </div>
             `;
-            if (paginacion) paginacion.innerHTML = "";
             return;
         }
 
         todasLasClases = data.clases || [];
         paginaActual = 1;
         mostrarPagina(paginaActual);
+        clasesYaCargadas = true;
 
     } catch (error) {
         console.error("Error al cargar las clases:", error);
@@ -37,7 +45,6 @@ async function cargarMisClases() {
                 <p>Error al cargar las clases.</p>
             </div>
         `;
-        if (paginacion) paginacion.innerHTML = "";
     }
 }
 
@@ -66,7 +73,7 @@ function renderizarClases(clases) {
     const ahora = new Date();
     let cardsHtml = "";
 
-    clases.forEach(function(clase) {
+    clases.forEach(function (clase) {
         const hora = clase.hora_inicio ? clase.hora_inicio.substring(0, 5) : "";
         const fecha = new Date(clase.fecha + "T00:00");
 
@@ -76,18 +83,18 @@ function renderizarClases(clases) {
             year: "numeric"
         });
 
-        // Validar si la clase es Próxima o Completada comparando fecha y hora actual
         const fechaHoraClase = new Date(`${clase.fecha}T${clase.hora_inicio || "00:00:00"}`);
         const esProxima = fechaHoraClase >= ahora;
 
-        const badge = esProxima 
+        const badge = esProxima
             ? `<span class="badge-proxima">PRÓXIMA</span>`
             : `<span class="badge-completada">COMPLETADA</span>`;
 
-        // Validar si tiene rutina y asignar estilos con contorno naranjo
         const tieneRutina = clase.id_rutina && clase.id_rutina !== "0" && clase.id_rutina !== 0;
+        // OJO: la URL se arma en JS con BASE_URL, no con PHP,
+        // porque id_rutina solo existe en tiempo de ejecución (por cada clase).
         const rutina = tieneRutina
-            ? `<a href="rutina.html?id_rutina=${clase.id_rutina}" class="btn-rutina-outline text-decoration-none">VER RUTINA</a>`
+            ? `<a href="${BASE_URL}alumna/rutina?id_rutina=${clase.id_rutina}" class="btn-rutina-outline text-decoration-none">VER RUTINA</a>`
             : `<span class="badge-sin-rutina-outline">SIN RUTINA</span>`;
 
         cardsHtml += `
@@ -154,6 +161,27 @@ function cambiarPagina(nuevaPagina) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    cargarMisClases();
+document.addEventListener("DOMContentLoaded", function () {
+    const dashboardTabs = document.getElementById("dashboardTabs");
+
+    if (!dashboardTabs) {
+        console.warn("No se encontró #dashboardTabs en el DOM.");
+        return;
+    }
+
+    // Delegación de eventos: escuchamos en el <ul> padre en vez del botón individual.
+    // Así funciona sin importar cuándo se creó el botón, y evita problemas si
+    // hay IDs duplicados (ej. versión desktop/mobile del nav).
+    dashboardTabs.addEventListener("shown.bs.tab", function (e) {
+        if (e.target && e.target.id === "clases-tab") {
+            cargarMisClases();
+        }
+    });
+
+    // Por si la pestaña "Clases" ya viene activa al cargar la página
+    // (ej. el usuario recarga estando en esa pestaña).
+    const clasesTabBtn = document.getElementById("clases-tab");
+    if (clasesTabBtn && clasesTabBtn.classList.contains("active")) {
+        cargarMisClases();
+    }
 });
