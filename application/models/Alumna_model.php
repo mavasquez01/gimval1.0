@@ -416,6 +416,25 @@ class Alumna_model extends CI_Model
 
         return $this->db->update('alumna', $datos);
     }
+
+    public function obtenerPlanActivo($rutAlumna)
+    {
+        $this->db->select('
+        p.nombre_plan,
+        p.cantidad_clases,
+        pa.fecha_inicio,
+        pa.fecha_termino,
+        pa.clases_restantes
+    ');
+
+        $this->db->from('plan_alumna pa');
+        $this->db->join('plan p', 'p.id_plan = pa.id_plan');
+
+        $this->db->where('pa.rut_alumna', $rutAlumna);
+        $this->db->where('pa.id_estado_plan', 1);
+
+        return $this->db->get()->row();
+    }
 }
 
 

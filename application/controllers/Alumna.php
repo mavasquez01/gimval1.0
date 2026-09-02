@@ -50,11 +50,18 @@ class Alumna extends CI_Controller
         $idUsuario = $this->session->userdata('id_usuario');
 
         $perfil = $this->Alumna_model->obtenerAlumnaPorId($idUsuario);
+
+        $plan = null;
+
+        if ($perfil) {
+            $plan = $this->Alumna_model->obtenerPlanActivo($perfil->rut);
+        }
         $data = [
             'perfil' => $perfil,
             'al_01' => $al_01,
             'al_02' => $al_02,
             'al_03' => $this->Alumna_model->AL_03("44444444-4"),
+            'plan' => $plan,
         ];
 
         $this->load->view('template/alumna/panelAlumna/header');
