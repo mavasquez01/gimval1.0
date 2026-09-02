@@ -18,7 +18,7 @@
 
         <div class="container-fluid">
 
-            <a class="navbar-brand" href="<?=base_url('index.php/alumna')?>">
+            <a class="navbar-brand" href="<?=base_url('/alumna')?>">
                 <img src="<?= base_url('/assets/images/logoval.png')?>" alt="Logo Valkiria" style="height: 60px;">
             </a>
 

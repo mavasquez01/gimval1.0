@@ -33,7 +33,7 @@
         </li>
 
         <li class="nav-item flex-fill p-0" role="presentation">
-            <button class="nav-link" id="perfiL-tab" data-bs-toggle="tab" data-bs-target="#perfil" type="button"
+            <button class="nav-link" id="perfil-tab" data-bs-toggle="tab" data-bs-target="#perfil" type="button"
                 role="tab" aria-controls="perfil" aria-selected="false">
 
                 <i class="bi bi-person-square d-block mb-1"></i>
@@ -50,6 +50,7 @@
 <script src="<?= base_url('/assets/sweetalert2/js/sweetalert2@11.js') ?>"></script>
 <script src="<?= base_url('/assets/js/alumna/horarios.js') ?>"></script>
 <script src="<?= base_url('/assets/js/alumna/misclases.js') ?>"></script>
+<script src="<?= base_url('/assets/js/alumna/navegacion.js') ?>"></script>
 
 
 </body>

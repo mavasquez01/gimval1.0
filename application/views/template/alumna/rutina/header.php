@@ -7,16 +7,18 @@
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap_icons/bootstrap-icons.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/temaValk.css') ?>">
-    <title>Rutina del día</title>
+    <title>Cambiar Contraseña</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-dark bg-body-tertiary" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg bg-dark bg-body-tertiary" data-bs-theme="dark">
 
         <div class="container-fluid">
 
-            <a class="navbar-brand" href="<?=base_url('index.php/alumna')?>">
-                <img src="<?= base_url('/assets/images/logoval.png')?>" alt="Logo Valkiria" style="height: 60px;">
+            <a href="<?=base_url('/alumna?clases')?>" class="text-white text-decoration-none ms-2">
+
+                <i class="bi bi-chevron-left fs-4"></i>
+
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -30,31 +32,31 @@
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 
                     <li class="nav-item">
-                        <a class="nav-link active" href="<?=base_url('index.php/alumna')?>">
+                        <a class="nav-link" href="<?=base_url('/index')?>">
                             Inicio
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=base_url('index.php/alumna/rutina')?>">
+                        <a class="nav-link active" href="<?=base_url('/alumna?clases')?>">
                             Mis clases
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=base_url('#agendar')?>">
+                        <a class="nav-link" href="<?=base_url("/alumna?agendar")?>">
                             Agendar
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=base_url('#perfil')?>">
+                        <a class="nav-link" href="<?=base_url("/alumna?perfil")?>">
                             Perfil
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=base_url('index.php/alumna/cerrarSesion')?>">
+                        <a class="nav-link" href="<?=base_url('/alumna/cerrarSesion')?>">
                             Cerrar Sesión
                         </a>
                     </li>
