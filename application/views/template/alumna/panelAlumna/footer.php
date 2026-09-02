@@ -51,6 +51,7 @@
 <script src="<?= base_url('/assets/js/alumna/horarios.js') ?>"></script>
 <script src="<?= base_url('/assets/js/alumna/misclases.js') ?>"></script>
 <script src="<?= base_url('/assets/js/alumna/navegacion.js') ?>"></script>
+<script src="<?= base_url('/assets/js/alumna/btn.js') ?>"></script>
 
 
 </body>

@@ -1,5 +1,6 @@
 (function () {
     let agendaCargada = false;
+    const baseUrl = (typeof BASE_URL !== 'undefined') ? BASE_URL : '';
 
     function cargarAgenda(forzar) {
         if (agendaCargada && !forzar) return;
@@ -8,17 +9,21 @@
         const contContent = document.getElementById("dias-tab-content");
         const textoSemana = document.getElementById("agenda-texto-semana");
 
+        if (!contContent) return;
+
         contContent.innerHTML =
             '<p class="text-secondary text-center">Cargando horarios...</p>';
 
-        fetch(BASE_URL + "alumna/agendaJson")
+        fetch(baseUrl + "alumna/agendaJson")
             .then(function (res) {
                 if (!res.ok) throw new Error("Error de red: " + res.status);
                 return res.json();
             })
             .then(function (data) {
-                textoSemana.textContent = data.texto_semana;
-                renderTabs(data.dias, contTabs, contContent);
+                if (textoSemana && data.texto_semana) {
+                    textoSemana.textContent = data.texto_semana;
+                }
+                renderTabs(data.dias || [], contTabs, contContent);
                 agendaCargada = true;
             })
             .catch(function (err) {
@@ -29,6 +34,7 @@
     }
 
     function renderTabs(dias, contTabs, contContent) {
+        if (!contTabs || !contContent) return;
         contTabs.innerHTML = "";
         contContent.innerHTML = "";
 
@@ -61,18 +67,24 @@
     }
 
     function renderBloques(bloques) {
-        if (!bloques.length) {
+        if (!bloques || !bloques.length) {
             return '<p class="text-secondary text-center">No hay clases</p>';
         }
 
         return bloques
             .map(function (b) {
-                const sinCupos =
-                    b.cupos_ocupados >= b.cupos_maximos && !b.reservado_por_mi;
+                const esPasado = Boolean(b.pasado);
+                const puedeCancelar = (typeof b.puede_cancelar !== 'undefined') ? Boolean(b.puede_cancelar) : true;
+                const sinCupos = b.cupos_ocupados >= b.cupos_maximos && !b.reservado_por_mi;
 
                 let etiquetaAccion = "AGENDAR";
-                if (b.reservado_por_mi) etiquetaAccion = "Cancelar";
-                else if (sinCupos) etiquetaAccion = "Sin cupos";
+                if (b.reservado_por_mi) {
+                    etiquetaAccion = puedeCancelar ? "Cancelar" : "Reservado";
+                } else if (esPasado) {
+                    etiquetaAccion = "Fuera de Horario";
+                } else if (sinCupos) {
+                    etiquetaAccion = "Sin cupos";
+                }
 
                 const infoBloque =
                     "<div>" +
@@ -99,15 +111,38 @@
                     "</small>" +
                     "</div>";
 
+                // Si está reservado por la alumna
                 if (b.reservado_por_mi) {
+                    if (puedeCancelar) {
+                        return (
+                            '<div class="schedule-card mb-3 clickable-card" role="button" tabindex="0" ' +
+                            'onclick="cancelarReserva(' +
+                            b.id_reserva +
+                            ')" ' +
+                            "onkeypress=\"if(event.key==='Enter')cancelarReserva(" +
+                            b.id_reserva +
+                            ')">' +
+                            '<div class="d-flex justify-content-between align-items-center">' +
+                            infoBloque +
+                            "</div>" +
+                            "</div>"
+                        );
+                    } else {
+                        // Reservado pero fuera del tiempo límite de cancelación (< 1 hora)
+                        return (
+                            '<div class="schedule-card mb-3" style="opacity:.85; cursor: default;" title="Solo puedes cancelar hasta 1 hora antes">' +
+                            '<div class="d-flex justify-content-between align-items-center">' +
+                            infoBloque +
+                            "</div>" +
+                            "</div>"
+                        );
+                    }
+                }
+
+                // Tarjeta bloqueada por fecha/hora pasada
+                if (esPasado) {
                     return (
-                        '<div class="schedule-card mb-3 clickable-card" role="button" tabindex="0" ' +
-                        'onclick="cancelarReserva(' +
-                        b.id_reserva +
-                        ')" ' +
-                        "onkeypress=\"if(event.key==='Enter')cancelarReserva(" +
-                        b.id_reserva +
-                        ')">' +
+                        '<div class="schedule-card mb-3" style="opacity:.5; cursor: not-allowed;">' +
                         '<div class="d-flex justify-content-between align-items-center">' +
                         infoBloque +
                         "</div>" +
@@ -142,12 +177,12 @@
     }
 
     function escapeHtml(str) {
+        if (!str) return '';
         const div = document.createElement("div");
         div.textContent = str;
         return div.innerHTML;
     }
 
-    // Modal base styles
     const swalBaseConfig = {
         buttonsStyling: false,
         didOpen: (popup) => {
@@ -175,14 +210,12 @@
             }
         }).then(function (result) {
             if (!result.isConfirmed) return;
-            fetch(BASE_URL + "alumna/cancelarReserva", {
+            fetch(baseUrl + "alumna/cancelarReserva", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: "id_reserva=" + encodeURIComponent(idReserva),
             })
-                .then(function (res) {
-                    return res.json();
-                })
+                .then(function (res) { return res.json(); })
                 .then(function (data) {
                     if (data.success) {
                         Swal.fire({
@@ -235,8 +268,10 @@
         const tarjeta = event.target.closest(".reservar-bloque");
         if (!tarjeta) return;
         event.preventDefault();
+
         const idBloque = tarjeta.getAttribute("data-id-bloque");
         if (!idBloque) return;
+
         Swal.fire({
             ...swalBaseConfig,
             title: "¿Reservar esta clase?",
@@ -254,35 +289,35 @@
             }
         }).then(function (result) {
             if (!result.isConfirmed) return;
-            fetch(BASE_URL + "alumna/crearReserva", {
+
+            fetch(baseUrl + "alumna/crearReserva", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: "id_bloque=" + encodeURIComponent(idBloque),
             })
-                .then(function (res) {
-                    return res.json();
-                })
+                .then(function (res) { return res.json(); })
                 .then(function (response) {
-                    const data = response.data || response;
+                    const esExitoso = (response.success === true) || (response.status === 'success');
+                    const info = response.data || response;
 
-                    if (data.success) {
-                        const profesora = data.nombre || "—";
+                    if (esExitoso) {
+                        const profesora = info.nombre || info.profesor_nombre || "—";
 
                         let fechaFormateada = "—";
-                        if (data.fecha) {
-                            const [yyyy, mm, dd] = data.fecha.split("-");
+                        if (info.fecha) {
+                            const [yyyy, mm, dd] = info.fecha.split("-");
                             fechaFormateada = `${dd}-${mm}-${yyyy.slice(-2)}`;
                         }
 
-                        const horaInicio = data.hora_inicio ? data.hora_inicio.substring(0, 5) : "";
-                        const horaTermino = data.hora_termino ? data.hora_termino.substring(0, 5) : "";
+                        const horaInicio = info.hora_inicio ? info.hora_inicio.substring(0, 5) : "";
+                        const horaTermino = info.hora_termino ? info.hora_termino.substring(0, 5) : "";
 
                         const fechaHora = `${fechaFormateada} de ${horaInicio} a ${horaTermino}`;
 
                         Swal.fire({
                             ...swalBaseConfig,
                             title: "¡Te inscribiste correctamente!",
-                            html: `Tu clase de <b class="text-white">Grupal</b> con <b class="text-white">${profesora}</b> quedó reservada para el <b class="text-white">${fechaHora}</b>.`,
+                            html: `Tu clase de <b class="text-white">Grupal</b> con <b class="text-white">${escapeHtml(profesora)}</b> quedó reservada para el <b class="text-white">${fechaHora}</b>.`,
                             icon: "success",
                             confirmButtonText: "Entendido",
                             customClass: {
@@ -297,7 +332,7 @@
                         Swal.fire({
                             ...swalBaseConfig,
                             title: "No se pudo reservar",
-                            text: data.mensaje || "No se pudo realizar la reserva.",
+                            text: response.mensaje || info.mensaje || "No se pudo realizar la reserva.",
                             icon: "error",
                             confirmButtonText: "Aceptar",
                             customClass: {
@@ -324,12 +359,19 @@
                 });
         });
     });
-	document.addEventListener("DOMContentLoaded", function () {
-		const agendaTabBtn = document.getElementById("agenda-tab");
-		if (agendaTabBtn) {
-			agendaTabBtn.addEventListener("shown.bs.tab", function () {
-				cargarAgenda(true);
-			});
-		}
-	});
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const agendaTabBtn = document.getElementById("agenda-tab");
+        const agendaPane = document.getElementById("agenda");
+
+        if (agendaTabBtn) {
+            agendaTabBtn.addEventListener("shown.bs.tab", function () {
+                cargarAgenda(true);
+            });
+        }
+
+        if (agendaPane && (agendaPane.classList.contains("active") || agendaPane.classList.contains("show"))) {
+            cargarAgenda(false);
+        }
+    });
 })();

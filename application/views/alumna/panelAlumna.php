@@ -8,10 +8,8 @@
             <!-- Welcome -->
             <section class="mb-4">
                 <h4 class="text-white mb-1">
-                    ¡Hola,
-                    <?= html_escape($perfil->nombre) ?>!
+                    ¡Hola, <?= html_escape($perfil->nombre ?? 'Alumna') ?>!
                 </h4>
-
                 <p class="text-secondary mb-0">
                     ¿Lista para entrenar hoy?
                 </p>
@@ -21,124 +19,96 @@
                 <!-- Próxima clase -->
                 <section class="plan-card">
 
-
-
-                    <p class="text-secondary mb-2">
-                        Próxima Clase
-                    </p>
+                    <p class="text-secondary mb-2">Próxima Clase</p>
 
                     <div>
                         <h2 class="text-white mb-1">
                             <?php
-                            $horan = new Datetime($al_01->hora_inicio);
-                            if ($al_01->fecha == date('Y-m-d')) {
-                                echo "Hoy ", $al_01->hora_inicio;
+                            $horan = new DateTime($al_01->hora_inicio);
+                            if ($al_01->fecha === date('Y-m-d')) {
+                                echo "Hoy " . $horan->format('H:i');
                             } else {
                                 $fecha = new DateTime($al_01->fecha);
-                                echo $fecha->format('d-m-Y'), " ", $horan->format('H:i');
+                                echo $fecha->format('d-m-Y') . " " . $horan->format('H:i');
                             }
                             ?>
                         </h2>
-
                     </div>
 
                     <hr class="class-divider">
 
                     <div class="d-flex justify-content-between align-items-center">
-
-                        <p class="text-secondary mb-0">
-                            Profesora
-                        </p>
-
+                        <p class="text-secondary mb-0">Profesora</p>
                         <p class="text-white text-end mb-0">
-                            <?= $al_01->nombre ?>
+                            <?= html_escape($al_01->nombre ?? 'Por asignar') ?>
                         </p>
-
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center mt-3">
-
-                        <p class="text-secondary mb-0">
-                            Clases Restantes
-                        </p>
-
+                        <p class="text-secondary mb-0">Clases Restantes</p>
                         <p class="text-white text-end mb-0">
-                            <span class="text-pink fw-bold"><?= $al_03->clases_restantes ?></span> de
-                            <?= $al_03->total_clases ?>
+                            <?php
+                            // Obtención segura de propiedades sin importar si AL_03 devuelve objeto o array
+                            $restantes = is_object($al_03) ? ($al_03->clases_restantes ?? 0) : ($al_03['clases_restantes'] ?? 0);
+                            $total = is_object($al_03) ? ($al_03->total_clases ?? 0) : ($al_03['total_clases'] ?? 0);
+                            ?>
+                            <span class="text-pink fw-bold"><?= $restantes ?></span> de <?= $total ?>
                         </p>
-
                     </div>
 
                     <div class="text-center mt-4">
-                        <a href="#" class="btn btn-outline-primary rounded-pill w-auto">
+                        <a href="#" id="btn-ver-horarios" class="btn btn-outline-primary rounded-pill w-auto">
                             Ver horarios
                         </a>
                     </div>
 
                 </section>
             <?php else: ?>
-                <p class="text-secondary text-center">No tienes clases próximas agendadas.</p>
+                <p class="text-secondary text-center my-4">No tienes clases próximas agendadas.</p>
             <?php endif; ?>
 
 
-
+            <!-- Lista de próximas clases -->
             <div class="mt-4">
+                <h5 class="text-white text-center mb-4">Próximas clases</h5>
 
-                <h5 class="text-white text-center mb-4">
-                    Próximas clases
-                </h5>
-                <?php
-                foreach ($al_02 as $clase) {
-                    $fecha = $clase->fecha;
-                    $date = new DateTime($fecha);
-                    $dia = $date->format('l');
-                    $horadb = $clase->hora_inicio;
-                    $hora = new DateTime($horadb);
+                <?php if (!empty($al_02) && is_array($al_02)): ?>
+                    <?php
+                    $dias = [
+                        'Monday' => 'Lun',
+                        'Tuesday' => 'Mar',
+                        'Wednesday' => 'Mier',
+                        'Thursday' => 'Jue',
+                        'Friday' => 'Vie',
+                        'Saturday' => 'Sab',
+                        'Sunday' => 'Dom'
+                    ];
                     ?>
 
+                    <?php foreach ($al_02 as $clase): ?>
+                        <?php
+                        $date = new DateTime($clase->fecha);
+                        $diaIngles = $date->format('l');
+                        $diaEsp = $dias[$diaIngles] ?? $clase->fecha;
+                        $hora = new DateTime($clase->hora_inicio);
+                        ?>
 
-                    <div class="schedule-card mb-2">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="text-white mb-1">
-                                    <?php
-                                    switch ($dia) {
-                                        case 'Monday':
-                                            echo "Lun ", $hora->format('H:i');
-                                            break;
-                                        case 'Tuesday':
-                                            echo "Mar ", $hora->format('H:i');
-                                            break;
-                                        case 'Wednesday':
-                                            echo "Mier ", $hora->format('H:i');
-                                            break;
-                                        case 'Thursday':
-                                            echo "Jue ", $hora->format('H:i');
-                                            break;
-                                        case 'Friday':
-                                            echo "Vie ", $hora->format('H:i');
-                                            break;
-                                        case 'Saturday':
-                                            echo "Sab ", $hora->format('H:i');
-                                            break;
-                                        default:
-                                            echo $clase->fecha, " ", $hora->format('H:i');
-                                            break;
-                                    }
-                                    ?>
-                                </h5>
+                        <div class="schedule-card mb-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="text-white mb-1">
+                                        <?= $diaEsp ?>         <?= $hora->format('H:i') ?>
+                                    </h5>
+                                </div>
+                                <small class="text-pink">
+                                    Prof. <?= html_escape($clase->nombre ?? 'Por asignar') ?>
+                                </small>
                             </div>
-
-                            <small class="text-pink">
-                                Prof. <?= $clase->nombre ?>
-                            </small>
                         </div>
-                    </div>
-
-                    <?php
-                }
-                ?>
-
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="text-secondary text-center small">No hay horarios disponibles registrados.</p>
+                <?php endif; ?>
             </div>
 
         </section>

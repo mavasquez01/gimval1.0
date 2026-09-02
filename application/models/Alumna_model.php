@@ -37,15 +37,16 @@ class Alumna_model extends CI_Model
     public function AL_04($alumna, $fecha_inicio, $fecha_fin)
     {
         $sql = "SELECT b.id_bloque, b.fecha, b.hora_inicio, b.hora_termino, b.cupos_maximos, "
-            . "p.nombre AS profesor_nombre, p.especialidad, "
+            . "p.nombre AS profesor_nombre, "
+            . "p.especialidad, "
             . "COUNT(r.id_reserva) AS cupos_ocupados, "
             . "MAX(CASE WHEN r.rut_alumna = ? AND r.vigente = 1 THEN 1 ELSE 0 END) AS reservado_por_mi, "
             . "MAX(CASE WHEN r.rut_alumna = ? AND r.vigente = 1 THEN r.id_reserva ELSE NULL END) AS id_reserva_propia "
             . "FROM bloque_horario AS b "
-            . "JOIN profesor AS p ON p.rut = b.rut_profesor "
+            . "LEFT JOIN profesor AS p ON p.rut = b.rut_profesor "
             . "LEFT JOIN reserva AS r ON r.id_bloque = b.id_bloque AND r.vigente = 1 "
             . "WHERE b.vigente = 1 AND b.fecha BETWEEN ? AND ? "
-            . "GROUP BY b.id_bloque, b.fecha, b.hora_inicio, b.hora_termino, b.cupos_maximos, p.nombre, p.especialidad "
+            . "GROUP BY b.id_bloque, b.fecha, b.hora_inicio, b.hora_termino, b.cupos_maximos, p.nombre, p.apellido, p.especialidad "
             . "ORDER BY b.fecha ASC, b.hora_inicio ASC";
 
         return $this->db->query($sql, [$alumna, $alumna, $fecha_inicio, $fecha_fin])->result();
@@ -89,11 +90,12 @@ class Alumna_model extends CI_Model
 
 
     //Hacer Reserva 
+    // Hacer Reserva 
     public function AL_06($alumna, $bloque)
     {
-
         $this->db->trans_begin();
-        //Comprobamos el bloque
+
+        // Comprobamos el bloque
         $infoBloque = $this->db->query(
             "SELECT
                     b.id_bloque as id_bloque,
@@ -111,9 +113,7 @@ class Alumna_model extends CI_Model
         )->row_array();
 
         if (!$infoBloque) {
-
             $this->db->trans_rollback();
-
             return [
                 'success' => false,
                 'mensaje' => 'El bloque seleccionado no existe.'
@@ -121,15 +121,14 @@ class Alumna_model extends CI_Model
         }
 
         if ((int) $infoBloque['vigente'] !== 1) {
-
             $this->db->trans_rollback();
-
             return [
                 'success' => false,
                 'mensaje' => 'Este bloque ya no se encuentra disponible.'
             ];
         }
-        //Comprobamos la reserva
+
+        // Comprobamos la reserva existente
         $reservaExistente = $this->db->query(
             "SELECT id_reserva
                 FROM reserva
@@ -141,15 +140,14 @@ class Alumna_model extends CI_Model
         )->row();
 
         if ($reservaExistente) {
-
             $this->db->trans_rollback();
-
             return [
                 'success' => false,
                 'mensaje' => 'Esta clase ya se encuentra registrada.'
             ];
         }
-        //Comprobamos los cupos
+
+        // Comprobamos los cupos
         $reservas = $this->db->query(
             "SELECT COUNT(*) AS cantidad
                 FROM reserva
@@ -161,45 +159,41 @@ class Alumna_model extends CI_Model
         $reservasActuales = (int) $reservas->cantidad;
         $cuposMaximos = (int) $infoBloque['cupos_maximos'];
 
-
         if ($reservasActuales >= $cuposMaximos) {
-
             $this->db->trans_rollback();
-
             return [
                 'success' => false,
                 'mensaje' => 'Esta clase ya no tiene cupos disponibles.'
             ];
         }
-        //Comprobamos las clases restantes del plan
+
+        // Comprobamos las clases restantes DEL PLAN ACTIVO
         $plan = $this->db->query(
-            "SELECT clases_restantes
+            "SELECT id_plan_alumna, clases_restantes
                 FROM plan_alumna
                 WHERE rut_alumna = ?
+                AND id_estado_plan = 1
                 LIMIT 1",
             [$alumna]
         )->row();
 
         if (!$plan) {
-
             $this->db->trans_rollback();
-
             return [
                 'success' => false,
-                'mensaje' => 'No se encontró un plan asociado a la alumna.'
+                'mensaje' => 'No se encontró un plan activo asociado a la alumna.'
             ];
         }
 
         if ((int) $plan->clases_restantes <= 0) {
-
             $this->db->trans_rollback();
-
             return [
                 'success' => false,
                 'mensaje' => 'No tienes clases disponibles para realizar esta reserva.'
             ];
         }
-        //Insertamos la reserva
+
+        // Insertamos la reserva
         $insertada = $this->db->query(
             "INSERT INTO reserva
                     (id_bloque, rut_alumna, fecha_reserva, asistencia, vigente)
@@ -208,44 +202,40 @@ class Alumna_model extends CI_Model
         );
 
         if (!$insertada) {
-
             $this->db->trans_rollback();
-
             return [
                 'success' => false,
                 'mensaje' => 'No se pudo crear la reserva.'
             ];
         }
-        //Descontamos la clase
+
+        // Descontamos la clase DEL PLAN ACTIVO ESPECÍFICO
         $actualizado = $this->db->query(
             "UPDATE plan_alumna
                 SET clases_restantes = clases_restantes - 1
-                WHERE rut_alumna = ?
+                WHERE id_plan_alumna = ?
                 AND clases_restantes > 0",
-            [$alumna]
+            [$plan->id_plan_alumna]
         );
 
         if (!$actualizado || $this->db->affected_rows() !== 1) {
-
             $this->db->trans_rollback();
-
             return [
                 'success' => false,
                 'mensaje' => 'No fue posible descontar la clase del plan.'
             ];
         }
-        //Comprobamos y confirmamos
+
         if ($this->db->trans_status() === FALSE) {
-
             $this->db->trans_rollback();
-
             return [
                 'success' => false,
                 'mensaje' => 'No se pudo confirmar la reserva. Intenta nuevamente.'
             ];
         }
+
         $this->db->trans_commit();
-        //Respuesta pal yeison
+
         return [
             'success' => true,
             'mensaje' => 'Reserva realizada correctamente.',
@@ -256,7 +246,6 @@ class Alumna_model extends CI_Model
             'hora_termino' => $infoBloque['hora_termino']
         ];
     }
-
     public function AL_07($rut_alumna)
     {
         // Validamos que venga el RUT

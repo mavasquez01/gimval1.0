@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/bootstrap.min.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/bootstrap-icons.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap_icons/bootstrap-icons.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/temaValk.css') ?>">
     <title>Modificar Datos</title>
 </head>
@@ -16,7 +16,7 @@
 
         <div class="container-fluid">
 
-            <a href="panelAlumna.html" class="text-white text-decoration-none ms-2">
+            <a href="<?=base_url('/alumna?perfil')?>" class="text-white text-decoration-none ms-2">
 
                 <i class="bi bi-chevron-left fs-4"></i>
 

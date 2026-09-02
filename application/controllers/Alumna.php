@@ -27,43 +27,40 @@ class Alumna extends CI_Controller
 
     public function index()
     {
-        //$correo = $this->session->userdata('correo');
+        // 1. Obtener la sesión y cargar el perfil de la alumna primero
+        $idUsuario = $this->session->userdata('id_usuario');
+        $perfil = $this->Alumna_model->obtenerAlumnaPorId($idUsuario);
 
-        //$data['perfil'] = $this->Autenticacion_model->buscarPorCorreo($correo);
+        // Extraer RUT solo si el perfil existe
+        $rut = $perfil->rut ?? null;
 
-        $resultado_al01 = $this->Alumna_model->AL_01("44444444-4");
+        // 2. Consultas que dependen del perfil o RUT del usuario
+        $plan = $rut ? $this->Alumna_model->obtenerPlanActivo($rut) : null;
+        $resultado_al01 = $rut ? $this->Alumna_model->AL_01($rut) : ['success' => false];
         $resultado_al02 = $this->Alumna_model->AL_02();
+        $al_03 = $rut ? $this->Alumna_model->AL_03($rut) : null;
 
-        // AL_01: una sola fila (o null si no hay próxima clase)
+        // 3. Procesamiento y formateo de datos
         $al_01 = ($resultado_al01['success'] && !empty($resultado_al01['data']))
             ? (object) $resultado_al01['data'][0]
             : null;
 
-        // AL_02: varias filas -> castear cada una individualmente
         $al_02 = [];
-        if ($resultado_al02['success']) {
+        if (!empty($resultado_al02['success']) && !empty($resultado_al02['data']) && is_array($resultado_al02['data'])) {
             foreach ($resultado_al02['data'] as $fila) {
                 $al_02[] = (object) $fila;
             }
         }
-
-        $idUsuario = $this->session->userdata('id_usuario');
-
-        $perfil = $this->Alumna_model->obtenerAlumnaPorId($idUsuario);
-
-        $plan = null;
-
-        if ($perfil) {
-            $plan = $this->Alumna_model->obtenerPlanActivo($perfil->rut);
-        }
+        // 4. Estructura de datos para la vista
         $data = [
             'perfil' => $perfil,
             'al_01' => $al_01,
             'al_02' => $al_02,
-            'al_03' => $this->Alumna_model->AL_03("44444444-4"),
+            'al_03' => $al_03,
             'plan' => $plan,
         ];
 
+        // 5. Carga de vistas
         $this->load->view('template/alumna/panelAlumna/header');
         $this->load->view('alumna/panelAlumna', $data);
         $this->load->view('template/alumna/panelAlumna/footer');
@@ -71,9 +68,12 @@ class Alumna extends CI_Controller
 
     public function agendaJson()
     {
-        $rut_alumna = "44444444-4"; // TODO: sesión
+        $rut_alumna = $this->_obtenerRutAlumna(); // TODO: sesión
 
-        $lunes = new DateTime();
+        // Se especifica la zona horaria local
+        $tz = new DateTimeZone('America/Santiago');
+
+        $lunes = new DateTime('now', $tz);
         $lunes->modify('monday this week');
         $sabado = (clone $lunes)->modify('+5 days');
 
@@ -99,20 +99,35 @@ class Alumna extends CI_Controller
             ];
         }
 
+        $ahora = new DateTime('now', $tz);
+
         foreach ($bloques as $bloque) {
             foreach ($dias as &$dia) {
                 if ($dia['fecha_iso'] === $bloque->fecha) {
-                    $fecha_bloque = new DateTime($bloque->fecha);
+                    $fecha_bloque = new DateTime($bloque->fecha, $tz);
+
+                    // Comparación usando zona horaria explícita
+                    $fecha_hora_bloque = new DateTime($bloque->fecha . ' ' . $bloque->hora_inicio, $tz);
+
+                    $es_pasado = ($fecha_hora_bloque <= $ahora);
+
+                    // Regla de cancelación: hasta 1 hora antes
+                    $limite_cancelacion = (clone $fecha_hora_bloque)->modify('-1 hour');
+                    $puede_cancelar = ($ahora < $limite_cancelacion);
+
                     $dia['bloques'][] = [
                         'id_bloque' => (int) $bloque->id_bloque,
-                        'id_reserva' => $bloque->id_reserva_propia ? (int) $bloque->id_reserva_propia : null,   // <- esta línea
+                        'id_reserva' => $bloque->id_reserva_propia ? (int) $bloque->id_reserva_propia : null,
                         'hora_inicio' => substr($bloque->hora_inicio, 0, 5),
                         'especialidad' => $bloque->especialidad,
                         'profesor_nombre' => $bloque->profesor_nombre,
                         'fecha_texto' => $fecha_bloque->format('d') . ' ' . $meses[(int) $fecha_bloque->format('n')] . ' ' . $fecha_bloque->format('Y'),
+                        'fecha_iso' => $bloque->fecha,
                         'cupos_ocupados' => (int) $bloque->cupos_ocupados,
                         'cupos_maximos' => (int) $bloque->cupos_maximos,
                         'reservado_por_mi' => (bool) $bloque->reservado_por_mi,
+                        'pasado' => $es_pasado,
+                        'puede_cancelar' => $puede_cancelar,
                     ];
                     break;
                 }
@@ -130,10 +145,31 @@ class Alumna extends CI_Controller
             ->set_output(json_encode($payload));
     }
 
+    /**
+     * Método auxiliar privado para obtener el RUT de la alumna logueada.
+     */
+    private function _obtenerRutAlumna()
+    {
+        $idUsuario = $this->session->userdata('id_usuario');
+        if (!$idUsuario) {
+            return null;
+        }
+
+        $perfil = $this->Alumna_model->obtenerAlumnaPorId($idUsuario);
+        return $perfil ? $perfil->rut : null;
+    }
 
     public function cancelarReserva()
     {
-        $rut_alumna = "44444444-4"; // todo: reemplazar por sesión real
+        $rut_alumna = $this->_obtenerRutAlumna();
+
+        if (!$rut_alumna) {
+            $this->output->set_status_header(401)
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['success' => false, 'mensaje' => 'Sesión no válida o perfil no encontrado.']));
+            return;
+        }
+
         $id_reserva = (int) $this->input->post('id_reserva');
 
         if (!$id_reserva) {
@@ -152,7 +188,15 @@ class Alumna extends CI_Controller
 
     public function crearReserva()
     {
-        $rut_alumna = "44444444-4";
+        $rut_alumna = $this->_obtenerRutAlumna();
+
+        if (!$rut_alumna) {
+            $this->output->set_status_header(401)
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['success' => false, 'mensaje' => 'Sesión no válida o perfil no encontrado.']));
+            return;
+        }
+
         $id_bloque = (int) $this->input->post('id_bloque');
 
         if (!$id_bloque) {
@@ -161,18 +205,25 @@ class Alumna extends CI_Controller
                 ->set_output(json_encode(['success' => false, 'mensaje' => 'Falta id_bloque.']));
             return;
         }
+
         $resultado = $this->Alumna_model->AL_06($rut_alumna, $id_bloque);
 
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($resultado));
-
     }
 
     public function obtener_mis_clases()
     {
-        //$rut_alumna = $this->session->userdata('rut_alumna');
-        $rut_alumna = "44444444-4";
+        $rut_alumna = $this->_obtenerRutAlumna();
+
+        if (!$rut_alumna) {
+            $this->output->set_status_header(401)
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['success' => false, 'mensaje' => 'Sesión no válida.']));
+            return;
+        }
+
         $this->output
             ->set_content_type('application/json')
             ->set_output(
@@ -180,7 +231,8 @@ class Alumna extends CI_Controller
             );
     }
 
-    public function rutina() {
+    public function rutina()
+    {
         $this->load->view('template/alumna/rutina/header');
         $this->load->view('alumna/rutina');
         $this->load->view('template/alumna/rutina/footer');
@@ -192,6 +244,7 @@ class Alumna extends CI_Controller
 
         if (!$id_rutina || !is_numeric($id_rutina)) {
             return $this->output
+                ->set_status_header(400)
                 ->set_content_type('application/json')
                 ->set_output(json_encode([
                     'success' => false,
@@ -199,12 +252,11 @@ class Alumna extends CI_Controller
                 ]));
         }
 
-        // AJUSTA esto a como guardas la sesión de la alumna logueada
-        //$rut_alumna = $this->session->userdata('rut_alumna');
-        $rut_alumna = "44444444-4";
+        $rut_alumna = $this->_obtenerRutAlumna();
 
         if (!$rut_alumna) {
             return $this->output
+                ->set_status_header(401)
                 ->set_content_type('application/json')
                 ->set_output(json_encode([
                     'success' => false,
@@ -238,11 +290,11 @@ class Alumna extends CI_Controller
 
     public function guardar_progreso()
     {
-        //$rut_alumna = $this->session->userdata('rut_alumna');
-        $rut_alumna = "44444444-4"; // AJUSTA según tu sesión
+        $rut_alumna = $this->_obtenerRutAlumna();
 
         if (!$rut_alumna) {
             return $this->output
+                ->set_status_header(401)
                 ->set_content_type('application/json')
                 ->set_output(json_encode(['success' => false, 'message' => 'Sesión no válida.']));
         }
@@ -252,6 +304,7 @@ class Alumna extends CI_Controller
 
         if (empty($ejercicios)) {
             return $this->output
+                ->set_status_header(400)
                 ->set_content_type('application/json')
                 ->set_output(json_encode(['success' => false, 'message' => 'No se recibieron ejercicios.']));
         }
@@ -269,13 +322,11 @@ class Alumna extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode(['success' => true]));
     }
+
     public function modificarDatos()
     {
-
-        // Obtenemos el id del usuario que inició sesión
         $idUsuario = $this->session->userdata('id_usuario');
 
-        // Buscamos sus datos personales en la tabla alumna
         $data['perfil'] = $this->Alumna_model->obtenerAlumnaPorId($idUsuario);
 
         $this->load->view('template/alumna/modificarDatos/header');
@@ -617,6 +668,5 @@ class Alumna extends CI_Controller
 
         redirect('autenticacion');
     }
-
 
 }
