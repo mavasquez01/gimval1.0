@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-08-2026 a las 05:16:30
+-- Tiempo de generación: 02-09-2026 a las 20:44:51
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -25,23 +25,111 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `AL_01` (IN `rut_alumna` VARCHAR(12))   BEGIN
-    SELECT r.id_reserva AS id_reserva, b.fecha AS fecha, b.hora_inicio AS hora_inicio, p.nombre AS nombre, r.vigente  
-    FROM reserva as r 
-    JOIN bloque_horario as b ON r.id_bloque = b.id_bloque
-    JOIN profesor as p ON b.rut_profesor = p.rut
-    WHERE rut_alumna = rut_alumna AND r.vigente = 1 AND NOW() < b.hora_inicio
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AL_01` (IN `p_rut_alumna` VARCHAR(20))   BEGIN
+    SELECT 
+        r.id_reserva,
+        b.id_bloque,
+        b.fecha,
+        b.hora_inicio,
+        b.hora_termino,
+        TRIM(CONCAT(p.nombre, ' ', IFNULL(p.apellido, ''))) AS profesor_nombre,
+        p.nombre AS nombre,
+        p.especialidad,
+        r.vigente
+    FROM reserva AS r 
+    JOIN bloque_horario AS b ON r.id_bloque = b.id_bloque
+    JOIN profesor AS p ON b.rut_profesor = p.rut
+    WHERE r.rut_alumna = p_rut_alumna 
+      AND r.vigente = 1 
+      AND b.vigente = 1 
+      AND TIMESTAMP(b.fecha, b.hora_inicio) >= NOW()
     ORDER BY b.fecha ASC, b.hora_inicio ASC
     LIMIT 1;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AL_02` ()   BEGIN
-    SELECT b.id_bloque AS id_bloque, b.fecha AS fecha, b.hora_inicio AS hora_inicio, p.nombre AS nombre, b.cupos_maximos AS cupos
-FROM bloque_horario AS b
-JOIN profesor AS p ON b.rut_profesor = p.rut
-WHERE b.vigente = 1
-ORDER BY b.fecha ASC, b.hora_inicio ASC
-LIMIT 3;
+    SELECT 
+        b.id_bloque,
+        b.fecha,
+        b.hora_inicio,
+        b.hora_termino,
+        TRIM(CONCAT(p.nombre, ' ', IFNULL(p.apellido, ''))) AS profesor_nombre,
+        p.nombre AS nombre,
+        p.especialidad,
+        b.cupos_maximos AS cupos,
+        b.cupos_maximos,
+        (
+            SELECT COUNT(*) 
+            FROM reserva r 
+            WHERE r.id_bloque = b.id_bloque 
+              AND r.vigente = 1
+        ) AS cupos_ocupados
+    FROM bloque_horario AS b
+    JOIN profesor AS p ON b.rut_profesor = p.rut
+    WHERE b.vigente = 1 
+      AND TIMESTAMP(b.fecha, b.hora_inicio) >= NOW()
+      AND (
+          SELECT COUNT(*) 
+          FROM reserva r 
+          WHERE r.id_bloque = b.id_bloque 
+            AND r.vigente = 1
+      ) < b.cupos_maximos
+    ORDER BY b.fecha ASC, b.hora_inicio ASC
+    LIMIT 3;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generar_bloques` ()   BEGIN
+    DECLARE v_fecha DATE;
+    DECLARE v_dia INT DEFAULT 0;
+    DECLARE v_profesor VARCHAR(12);
+
+    -- Comenzamos desde el lunes de la semana actual
+    SET v_fecha = DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY);
+
+    WHILE v_dia < 7 DO
+
+        -- Clase 1 - Mañana
+        SET v_profesor = IF(RAND() < 0.5, '22222222-2', '33333333-3');
+
+        INSERT INTO bloque_horario
+            (rut_profesor, fecha, hora_inicio, hora_termino, cupos_maximos, vigente)
+        VALUES
+            (v_profesor, v_fecha, '09:00:00', '10:00:00', 20, 1);
+
+
+        -- Clase 2 - Mañana
+        SET v_profesor = IF(RAND() < 0.5, '22222222-2', '33333333-3');
+
+        INSERT INTO bloque_horario
+            (rut_profesor, fecha, hora_inicio, hora_termino, cupos_maximos, vigente)
+        VALUES
+            (v_profesor, v_fecha, '10:30:00', '11:30:00', 20, 1);
+
+
+        -- Clase 3 - Tarde
+        SET v_profesor = IF(RAND() < 0.5, '22222222-2', '33333333-3');
+
+        INSERT INTO bloque_horario
+            (rut_profesor, fecha, hora_inicio, hora_termino, cupos_maximos, vigente)
+        VALUES
+            (v_profesor, v_fecha, '15:00:00', '16:00:00', 20, 1);
+
+
+        -- Clase 4 - Tarde
+        SET v_profesor = IF(RAND() < 0.5, '22222222-2', '33333333-3');
+
+        INSERT INTO bloque_horario
+            (rut_profesor, fecha, hora_inicio, hora_termino, cupos_maximos, vigente)
+        VALUES
+            (v_profesor, v_fecha, '16:30:00', '17:30:00', 20, 1);
+
+
+        -- Siguiente día
+        SET v_fecha = DATE_ADD(v_fecha, INTERVAL 1 DAY);
+        SET v_dia = v_dia + 1;
+
+    END WHILE;
+
 END$$
 
 DELIMITER ;
@@ -90,6 +178,7 @@ CREATE TABLE `alumna` (
 --
 
 INSERT INTO `alumna` (`rut`, `id_usuario`, `nombre`, `apellido`, `fecha_nacimiento`, `telefono`, `fecha_registro`, `activo`) VALUES
+('20.469.976-3', 7, 'Maximliano', 'VasquezSSSSSSS', '2000-04-17', '+56977970654', '2026-09-02', 1),
 ('44444444-4', 4, 'Javiera', 'Fernández', '1998-05-12', '+56911111111', '2025-01-10', 1),
 ('55555555-5', 5, 'Antonia', 'López', '1995-09-23', '+56922222222', '2025-02-20', 1),
 ('66666666-6', 6, 'Fernanda', 'Castro', '2000-11-02', '+56933333333', '2025-03-05', 1);
@@ -117,7 +206,35 @@ CREATE TABLE `bloque_horario` (
 INSERT INTO `bloque_horario` (`id_bloque`, `rut_profesor`, `fecha`, `hora_inicio`, `hora_termino`, `cupos_maximos`, `vigente`) VALUES
 (1, '22222222-2', '2026-09-05', '09:00:00', '10:00:00', 15, 1),
 (2, '33333333-3', '2026-09-06', '22:00:00', '19:00:00', 10, 1),
-(3, '22222222-2', '2026-08-20', '09:00:00', '10:00:00', 15, 0);
+(3, '22222222-2', '2026-08-20', '09:00:00', '10:00:00', 15, 0),
+(4, '22222222-2', '2026-08-31', '09:00:00', '10:00:00', 20, 1),
+(5, '33333333-3', '2026-08-31', '10:30:00', '11:30:00', 20, 1),
+(6, '22222222-2', '2026-08-31', '15:00:00', '16:00:00', 20, 1),
+(7, '33333333-3', '2026-08-31', '16:30:00', '17:30:00', 20, 1),
+(8, '33333333-3', '2026-09-01', '09:00:00', '10:00:00', 20, 1),
+(9, '33333333-3', '2026-09-01', '10:30:00', '11:30:00', 20, 1),
+(10, '22222222-2', '2026-09-01', '15:00:00', '16:00:00', 20, 1),
+(11, '22222222-2', '2026-09-01', '16:30:00', '17:30:00', 20, 1),
+(12, '22222222-2', '2026-09-02', '09:00:00', '10:00:00', 20, 1),
+(13, '22222222-2', '2026-09-02', '10:30:00', '11:30:00', 20, 1),
+(14, '22222222-2', '2026-09-02', '15:00:00', '16:00:00', 20, 1),
+(15, '33333333-3', '2026-09-02', '16:30:00', '17:30:00', 20, 1),
+(16, '22222222-2', '2026-09-03', '09:00:00', '10:00:00', 20, 1),
+(17, '33333333-3', '2026-09-03', '10:30:00', '11:30:00', 20, 1),
+(18, '22222222-2', '2026-09-03', '15:00:00', '16:00:00', 20, 1),
+(19, '22222222-2', '2026-09-03', '16:30:00', '17:30:00', 20, 1),
+(20, '33333333-3', '2026-09-04', '09:00:00', '10:00:00', 20, 1),
+(21, '33333333-3', '2026-09-04', '10:30:00', '11:30:00', 20, 1),
+(22, '33333333-3', '2026-09-04', '15:00:00', '16:00:00', 20, 1),
+(23, '22222222-2', '2026-09-04', '16:30:00', '17:30:00', 20, 1),
+(24, '33333333-3', '2026-09-05', '09:00:00', '10:00:00', 20, 1),
+(25, '22222222-2', '2026-09-05', '10:30:00', '11:30:00', 20, 1),
+(26, '33333333-3', '2026-09-05', '15:00:00', '16:00:00', 20, 1),
+(27, '33333333-3', '2026-09-05', '16:30:00', '17:30:00', 20, 1),
+(28, '33333333-3', '2026-09-06', '09:00:00', '10:00:00', 20, 1),
+(29, '33333333-3', '2026-09-06', '10:30:00', '11:30:00', 20, 1),
+(30, '22222222-2', '2026-09-06', '15:00:00', '16:00:00', 20, 1),
+(31, '22222222-2', '2026-09-06', '16:30:00', '17:30:00', 20, 1);
 
 -- --------------------------------------------------------
 
@@ -298,7 +415,9 @@ CREATE TABLE `plan_alumna` (
 INSERT INTO `plan_alumna` (`id_plan_alumna`, `rut_alumna`, `id_plan`, `fecha_inicio`, `fecha_termino`, `clases_restantes`, `id_estado_plan`) VALUES
 (1, '44444444-4', 2, '2026-08-15', '2026-09-15', 20, 1),
 (2, '55555555-5', 1, '2026-07-01', '2026-07-31', 0, 2),
-(3, '66666666-6', 1, '2026-08-20', '2026-09-20', 6, 1);
+(3, '66666666-6', 1, '2026-08-20', '2026-09-20', 6, 1),
+(4, '20.469.976-3', 2, '2026-09-01', '2026-10-01', 997, 1),
+(5, '20.469.976-3', 2, '2026-09-01', '2026-10-01', 999, 1);
 
 -- --------------------------------------------------------
 
@@ -345,7 +464,13 @@ CREATE TABLE `progreso_alumna` (
 INSERT INTO `progreso_alumna` (`id_progreso`, `rut_alumna`, `id_ejercicio`, `fecha`, `peso_kg`) VALUES
 (1, '44444444-4', 1, '2026-08-20', 40.00),
 (2, '44444444-4', 2, '2026-08-20', 25.00),
-(3, '55555555-5', 1, '2026-08-15', 30.00);
+(3, '55555555-5', 1, '2026-08-15', 30.00),
+(4, '44444444-4', 1, '2026-09-02', 40.00),
+(5, '44444444-4', 2, '2026-09-02', 25.00),
+(6, '44444444-4', 3, '2026-09-02', 76.00),
+(7, '20.469.976-3', 1, '2026-09-02', 12.00),
+(8, '20.469.976-3', 2, '2026-09-02', 23.00),
+(9, '20.469.976-3', 3, '2026-09-02', 34.00);
 
 -- --------------------------------------------------------
 
@@ -370,7 +495,10 @@ INSERT INTO `reserva` (`id_reserva`, `id_bloque`, `rut_alumna`, `fecha_reserva`,
 (1, 1, '44444444-4', '2026-08-25 16:00:00', 0, 1),
 (2, 2, '44444444-4', '2026-08-26 19:30:00', 0, 1),
 (3, 3, '55555555-5', '2026-08-15 13:00:00', 1, 0),
-(4, 1, '66666666-6', '2026-08-27 12:00:00', 0, 1);
+(4, 1, '66666666-6', '2026-08-27 12:00:00', 0, 1),
+(19, 14, '20.469.976-3', '2026-09-02 18:27:53', 0, 1),
+(20, 15, '20.469.976-3', '2026-09-02 18:28:02', 0, 0),
+(21, 1, '20.469.976-3', '2026-09-02 18:28:15', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -439,7 +567,8 @@ INSERT INTO `usuario` (`id_usuario`, `email`, `contrasena_hash`, `id_rol`, `acti
 (3, 'vsoto@gimval.cl', '$2b$12$dummyhash.profesor20000000000000000000000', 2, 1, '2026-08-30 21:09:37', NULL),
 (4, 'jfernandez@gimval.cl', '$2b$12$dummyhash.alumna1000000000000000000000000', 1, 1, '2026-08-30 21:09:37', NULL),
 (5, 'alopez@gimval.cl', '$2b$12$dummyhash.alumna2000000000000000000000000', 1, 1, '2026-08-30 21:09:37', NULL),
-(6, 'fcastro@gimval.cl', '$2b$12$dummyhash.alumna3000000000000000000000000', 1, 1, '2026-08-30 21:09:37', NULL);
+(6, 'fcastro@gimval.cl', '$2b$12$dummyhash.alumna3000000000000000000000000', 1, 1, '2026-08-30 21:09:37', NULL),
+(7, 'a@gimval.com', '$2y$10$83W4x0adOYR01yBKuJ0cRu9ii2HjbDaohfKDFiqTxNXajKSNx379O', 1, 1, '2026-09-02 13:45:35', '2026-09-02 13:45:35');
 
 --
 -- Índices para tablas volcadas
@@ -576,7 +705,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `bloque_horario`
 --
 ALTER TABLE `bloque_horario`
-  MODIFY `id_bloque` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_bloque` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de la tabla `consentimiento`
@@ -624,19 +753,19 @@ ALTER TABLE `plan`
 -- AUTO_INCREMENT de la tabla `plan_alumna`
 --
 ALTER TABLE `plan_alumna`
-  MODIFY `id_plan_alumna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_plan_alumna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `progreso_alumna`
 --
 ALTER TABLE `progreso_alumna`
-  MODIFY `id_progreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_progreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `reserva`
 --
 ALTER TABLE `reserva`
-  MODIFY `id_reserva` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_reserva` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
@@ -654,7 +783,7 @@ ALTER TABLE `rutina`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Restricciones para tablas volcadas
