@@ -213,21 +213,31 @@
 
                 <div class="plan-card mb-3">
 
-                    <p class="text-white fw-semibold mb-1">
-                        Mi plan
-                    </p>
+                    <?php if ($plan): ?>
 
-                    <p class="text-pink fw-bold mb-1">
-                        Plan Grupal Fit
-                    </p>
+                        <p class="text-pink fw-bold mb-1">
+                            <?= html_escape($plan->nombre_plan) ?>
+                        </p>
 
-                    <small class="text-secondary d-block">
-                        Vence el 30/06/2026
-                    </small>
+                        <small class="text-secondary d-block">
+                            Vence el
+                            <?= date('d/m/Y', strtotime($plan->fecha_termino)) ?>
+                        </small>
 
-                    <small class="text-white d-block mt-2">
-                        5 de 24 clases restantes
-                    </small>
+                        <small class="text-white d-block mt-2">
+                            <?= html_escape($plan->clases_restantes) ?>
+                            de
+                            <?= html_escape($plan->cantidad_clases) ?>
+                            clases restantes
+                        </small>
+
+                    <?php else: ?>
+
+                        <p class="text-secondary mb-0">
+                            No tienes un plan activo.
+                        </p>
+
+                    <?php endif; ?>
 
                 </div>
 
@@ -239,13 +249,13 @@
                 </div>
 
                 <div class="schedule-card mb-2">
-                    <a href="<?= site_url('alumna/cambiarContrasenia') ?>" class="d-flex align-items-center text-white">
+                    <a href="<?= site_url('alumna/cambiarContrasena') ?>" class="d-flex align-items-center text-white">
                         <i class="bi bi-key me-3 text-pink"></i>
                         Cambiar contraseña
                     </a>
                 </div>
                 <div class="schedule-card mb-2">
-                    <a href=""<?= site_url('alumna/convenios') ?>"" class="d-flex align-items-center text-white">
+                    <a href="<?= site_url('alumna/convenios') ?>" class="d-flex align-items-center text-white">
                         <i class="bi bi-person me-3 text-pink"></i>
                         Ver Convenios
                     </a>

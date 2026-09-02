@@ -11,15 +11,24 @@
     </div>
 
     <div class="plan-card">
+        <?php
+        $alertaDatos = $this->session->flashdata('alerta_datos');
+        ?>
 
-        <form>
+        <script>
+            const alertaDatosBackend = <?= json_encode(
+                $alertaDatos,
+                JSON_UNESCAPED_UNICODE
+            ) ?>;
+        </script>
+        <form method="post" action="<?= site_url('alumna/actualizarDatos') ?>" id="formModificarDatos" novalidate>
 
             <div class="mb-3">
                 <label class="form-label text-white" for="nombres">
                     Nombres
                 </label>
 
-                <input type="text" id="nombres" class="form-control custom-input"
+                <input type="text" id="nombre" name="nombre" class="form-control custom-input"
                     value="<?= html_escape($perfil->nombre) ?>">
             </div>
 
@@ -28,7 +37,7 @@
                     Apellidos
                 </label>
 
-                <input type="text" id="apellidos" class="form-control custom-input"
+                <input type="text" id="apellido" name="apellido" class="form-control custom-input"
                     value="<?= html_escape($perfil->apellido) ?>">
             </div>
 
@@ -37,7 +46,7 @@
                     Correo electrónico
                 </label>
 
-                <input type="email" id="correo" class="form-control custom-input"
+                <input type="email" id="correo" name="correo" class="form-control custom-input"
                     value="<?= html_escape($this->session->userdata('correo')) ?>">
             </div>
 
@@ -46,7 +55,7 @@
                     Teléfono
                 </label>
 
-                <input type="tel" id="telefono" class="form-control custom-input"
+                <input type="tel" id="telefono" name="telefono" class="form-control custom-input"
                     value="<?= html_escape($perfil->telefono) ?>">
             </div>
 
@@ -55,7 +64,7 @@
                     Fecha de nacimiento
                 </label>
 
-                <input type="date" id="fechaNacimiento" class="form-control custom-input"
+                <input type="date" id="fechaNacimiento" name="fecha_nacimiento" class="form-control custom-input"
                     value="<?= html_escape($perfil->fecha_nacimiento) ?>">
             </div>
 

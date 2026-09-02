@@ -335,6 +335,15 @@ class Alumna_model extends CI_Model
         ]);
     }
 
+    // Obtener convenios activos
+    public function AL_08()
+    {
+        $this->db->where('estado', 1);
+        $query = $this->db->get('convenio');
+
+        return $query->result();
+    }
+
     private function ejecutar_sp($sql, $params = [])
     {
         $db_debug = $this->db->db_debug;
@@ -377,6 +386,54 @@ class Alumna_model extends CI_Model
                 $res->free();
             }
         }
+    }
+
+    public function guardarPerfil($datos)
+    {
+        return $this->db->insert('alumna', $datos);
+    }
+
+    public function buscarPorRut($rut)
+    {
+        $this->db->where('rut', $rut);
+        $query = $this->db->get('alumna');
+
+        return $query->row();
+    }
+
+    public function cambiarContrasena($idUsuario, $hash)
+    {
+        $this->db->where('id_usuario', $idUsuario);
+
+        return $this->db->update('usuario', [
+            'contrasena_hash' => $hash
+        ]);
+    }
+
+    public function actualizarDatos($idUsuario, $datos)
+    {
+        $this->db->where('id_usuario', $idUsuario);
+
+        return $this->db->update('alumna', $datos);
+    }
+
+    public function obtenerPlanActivo($rutAlumna)
+    {
+        $this->db->select('
+        p.nombre_plan,
+        p.cantidad_clases,
+        pa.fecha_inicio,
+        pa.fecha_termino,
+        pa.clases_restantes
+    ');
+
+        $this->db->from('plan_alumna pa');
+        $this->db->join('plan p', 'p.id_plan = pa.id_plan');
+
+        $this->db->where('pa.rut_alumna', $rutAlumna);
+        $this->db->where('pa.id_estado_plan', 1);
+
+        return $this->db->get()->row();
     }
 }
 
