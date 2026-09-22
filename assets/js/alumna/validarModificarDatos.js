@@ -1,35 +1,13 @@
-document.addEventListener("DOMContentLoaded", function () {
+const swalBaseConfig = {
+    buttonsStyling: false,
 
-    // ALERTAS DEL BACKEND
-    if (typeof alertaDatosBackend !== "undefined" && alertaDatosBackend) {
-
-        Swal.fire({
-            icon: alertaDatosBackend.icon,
-            title: alertaDatosBackend.title,
-
-            html: alertaDatosBackend.text
-                .split(/\r?\n/)
-                .filter(error => error.trim() !== "")
-                .map(error =>
-                    `<div style="text-align:left; margin-bottom:8px;">${error}</div>`
-                )
-                .join(""),
-
-            background: "#0d0d0d",
-            color: "#ffffff",
-            confirmButtonText: "ENTENDIDO",
-            width: "360px",
-
-            customClass: {
-                popup: "valkyria-alert",
-                title: "valkyria-alert-title",
-                confirmButton: "valkyria-alert-button"
-            }
-        });
+    didOpen: (popup) => {
+        popup.style.maxHeight = "calc(100vh - 3rem)";
+        popup.style.margin = "auto";
     }
+};
 
-
-    // VALIDACIÓN FRONTEND
+document.addEventListener("DOMContentLoaded", function () {
 
     const formulario = document.getElementById("formModificarDatos");
 
@@ -48,54 +26,68 @@ document.addEventListener("DOMContentLoaded", function () {
     const regexTelefono = /^\+?[0-9]{8,15}$/;
 
 
-    formulario.addEventListener("submit", function (e) {
+    formulario.addEventListener("submit", async function (e) {
+        // Ahora SIEMPRE detenemos el envío normal
+        e.preventDefault();
 
         const errores = [];
 
         // Nombre
         if (nombre.value.trim() === "") {
+
             errores.push("Debes ingresar tu nombre.");
 
         } else if (nombre.value.trim().length < 2) {
+
             errores.push("El nombre debe tener al menos 2 caracteres.");
 
         } else if (nombre.value.trim().length > 60) {
+
             errores.push("El nombre no puede superar los 60 caracteres.");
 
         } else if (!regexNombre.test(nombre.value.trim())) {
+
             errores.push("El nombre solo puede contener letras y espacios.");
         }
 
 
         // Apellido
         if (apellido.value.trim() === "") {
+
             errores.push("Debes ingresar tu apellido.");
 
         } else if (apellido.value.trim().length < 2) {
+
             errores.push("El apellido debe tener al menos 2 caracteres.");
 
         } else if (apellido.value.trim().length > 60) {
+
             errores.push("El apellido no puede superar los 60 caracteres.");
 
         } else if (!regexNombre.test(apellido.value.trim())) {
+
             errores.push("El apellido solo puede contener letras y espacios.");
         }
 
 
         // Correo
         if (correo.value.trim() === "") {
+
             errores.push("Debes ingresar tu correo electrónico.");
 
         } else if (!regexCorreo.test(correo.value.trim())) {
+
             errores.push("Debes ingresar un correo electrónico válido.");
         }
 
 
         // Teléfono
         if (telefono.value.trim() === "") {
+
             errores.push("Debes ingresar tu teléfono.");
 
         } else if (!regexTelefono.test(telefono.value.trim())) {
+
             errores.push("El teléfono debe contener entre 8 y 15 números.");
         }
 
@@ -138,6 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 if (edad < 14 || edad > 100) {
+
                     errores.push(
                         "La fecha de nacimiento ingresada no es válida."
                     );
@@ -146,30 +139,117 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // Si hay errores detenemos el formulario
+        // Si existen errores frontend
         if (errores.length > 0) {
 
-            e.preventDefault();
-
             Swal.fire({
+                ...swalBaseConfig,
+
                 icon: "warning",
                 title: "Revisa tus datos",
 
                 html: errores
                     .map(error =>
-                        `<div style="text-align:left; margin-bottom:8px;">${error}</div>`
+                        `<div style="text-align:left; margin-bottom:8px;">
+                    ${error}
+                </div>`
                     )
                     .join(""),
 
-                background: "#0d0d0d",
-                color: "#ffffff",
-                confirmButtonText: "ENTENDIDO",
-                width: "360px",
+                confirmButtonText: "Aceptar",
 
                 customClass: {
-                    popup: "valkyria-alert",
-                    title: "valkyria-alert-title",
-                    confirmButton: "valkyria-alert-button"
+                    popup: "modal-content p-4 text-white",
+                    actions: "w-100 m-0 mt-3",
+                    confirmButton: "btn btn-primary w-100"
+                }
+            });
+
+            return;
+        }
+
+
+        // ==========================
+        // AJAX
+        // ==========================
+
+        const datosFormulario = new FormData(formulario);
+
+        try {
+
+            const respuesta = await fetch(formulario.action, {
+                method: "POST",
+                body: datosFormulario
+            });
+
+            const data = await respuesta.json();
+
+
+            // Si el backend devuelve un error
+            if (!respuesta.ok || !data.success) {
+
+                Swal.fire({
+                    ...swalBaseConfig,
+
+                    icon: "error",
+                    title: "No se pudieron actualizar los datos",
+
+                    html: data.mensaje
+                        .split(/\r?\n/)
+                        .filter(error => error.trim() !== "")
+                        .map(error =>
+                            `<div style="text-align:left; margin-bottom:8px;">
+                    ${error}
+                </div>`
+                        )
+                        .join(""),
+
+                    confirmButtonText: "Aceptar",
+
+                    customClass: {
+                        popup: "modal-content p-4 text-white",
+                        actions: "w-100 m-0 mt-3",
+                        confirmButton: "btn btn-primary w-100"
+                    }
+                });
+
+                return;
+            }
+
+
+            // Si se actualizó correctamente
+            Swal.fire({
+                ...swalBaseConfig,
+
+                title: "¡Datos actualizados!",
+                text: data.mensaje,
+                icon: "success",
+                confirmButtonText: "Entendido",
+
+                customClass: {
+                    popup: "modal-content p-4 text-white",
+                    actions: "w-100 m-0 mt-3",
+                    confirmButton: "btn btn-primary w-100"
+                }
+            });
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            Swal.fire({
+                ...swalBaseConfig,
+
+                title: "Error",
+                text: "Ocurrió un error al comunicarse con el servidor.",
+                icon: "error",
+                confirmButtonText: "Aceptar",
+
+                customClass: {
+                    popup: "modal-content p-4 text-white",
+                    actions: "w-100 m-0 mt-3",
+                    confirmButton: "btn btn-primary w-100"
                 }
             });
         }

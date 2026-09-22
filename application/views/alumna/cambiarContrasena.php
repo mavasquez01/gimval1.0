@@ -50,7 +50,7 @@
                 Actualizar contraseña
             </button>
 
-            <a href="<?= site_url('alumna') ?>" class="btn btn-outline-primary w-100">
+            <a href="<?= site_url('alumna?perfil') ?>" class="btn btn-outline-primary w-100">
                 Cancelar
             </a>
 

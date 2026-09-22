@@ -15,7 +15,7 @@ class Alumna extends CI_Controller
 
         //true: login obligatorio 
         //false: para acceder sin login
-        $protegerRutas = false;
+        $protegerRutas = true;
 
         if ($protegerRutas) {
             if (!$this->session->userdata('logueado')) {
@@ -339,8 +339,14 @@ class Alumna extends CI_Controller
         $idUsuario = $this->session->userdata('id_usuario');
 
         if (!$idUsuario) {
-            redirect('autenticacion');
-            return;
+
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(401)
+                ->set_output(json_encode([
+                    'success' => false,
+                    'mensaje' => 'Tu sesión ha expirado.'
+                ]));
         }
 
         // Validar nombre
@@ -398,39 +404,38 @@ class Alumna extends CI_Controller
             ]
         );
 
-        // Ejecutar todas las validaciones
+        // Si falla la validación backend
         if ($this->form_validation->run() == FALSE) {
 
-            $this->session->set_flashdata('alerta_datos', [
-                'icon' => 'warning',
-                'title' => 'Revisa tus datos',
-                'text' => strip_tags(validation_errors("\n", "\n"))
-            ]);
-
-            redirect('alumna/modificarDatos');
-            return;
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(422)
+                ->set_output(json_encode([
+                    'success' => false,
+                    'mensaje' => strip_tags(validation_errors("\n", "\n"))
+                ]));
         }
 
-        // Obtener correo
         $correo = $this->input->post('correo', TRUE);
 
-        // Revisar que el correo no pertenezca a otro usuario
+        // Revisar correo duplicado
         $correoExistente = $this->Autenticacion_model
-            ->buscarPorCorreoExceptoUsuario($correo, $idUsuario);
+            ->buscarPorCorreoExceptoUsuario(
+                $correo,
+                $idUsuario
+            );
 
         if ($correoExistente) {
 
-            $this->session->set_flashdata('alerta_datos', [
-                'icon' => 'warning',
-                'title' => 'Correo ya registrado',
-                'text' => 'El correo ingresado ya pertenece a otro usuario.'
-            ]);
-
-            redirect('alumna/modificarDatos');
-            return;
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(409)
+                ->set_output(json_encode([
+                    'success' => false,
+                    'mensaje' => 'El correo ingresado ya pertenece a otro usuario.'
+                ]));
         }
 
-        // Datos de la tabla alumna
         $datos = [
             'nombre' => $this->input->post('nombre', TRUE),
             'apellido' => $this->input->post('apellido', TRUE),
@@ -438,13 +443,11 @@ class Alumna extends CI_Controller
             'fecha_nacimiento' => $this->input->post('fecha_nacimiento', TRUE)
         ];
 
-        // Actualizar datos personales
         $resultadoDatos = $this->Alumna_model->actualizarDatos(
             $idUsuario,
             $datos
         );
 
-        // Actualizar correo en usuario
         $resultadoCorreo = $this->Autenticacion_model->actualizarCorreo(
             $idUsuario,
             $correo
@@ -452,26 +455,24 @@ class Alumna extends CI_Controller
 
         if (!$resultadoDatos || !$resultadoCorreo) {
 
-            $this->session->set_flashdata('alerta_datos', [
-                'icon' => 'error',
-                'title' => 'Error',
-                'text' => 'No se pudieron actualizar tus datos.'
-            ]);
-
-            redirect('alumna/modificarDatos');
-            return;
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output(json_encode([
+                    'success' => false,
+                    'mensaje' => 'No se pudieron actualizar tus datos.'
+                ]));
         }
 
-        // Actualizamos también el correo guardado en sesión
+        // Actualizar correo en sesión
         $this->session->set_userdata('correo', $correo);
 
-        $this->session->set_flashdata('alerta_datos', [
-            'icon' => 'success',
-            'title' => 'Datos actualizados',
-            'text' => 'Tus datos fueron actualizados correctamente.'
-        ]);
-
-        redirect('alumna/modificarDatos');
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode([
+                'success' => true,
+                'mensaje' => 'Tus datos fueron actualizados correctamente.'
+            ]));
     }
 
     public function validarFechaNacimiento($fecha)
@@ -543,8 +544,13 @@ class Alumna extends CI_Controller
         $idUsuario = $this->session->userdata('id_usuario');
 
         if (!$idUsuario) {
-            redirect('autenticacion');
-            return;
+            return $this->output
+                ->set_status_header(401)
+                ->set_content_type('application/json')
+                ->set_output(json_encode([
+                    'success' => false,
+                    'mensaje' => 'Tu sesión ha expirado.'
+                ]));
         }
 
         // Validaciones
@@ -579,87 +585,95 @@ class Alumna extends CI_Controller
 
         // Si las validaciones fallan
         if ($this->form_validation->run() == FALSE) {
-
-            $this->session->set_flashdata('alerta_contrasena', [
-                'icon' => 'warning',
-                'title' => 'Revisa tus datos',
-                'text' => strip_tags(validation_errors("\n", "\n"))
-            ]);
-
-            redirect('alumna/cambiarContrasena');
-            return;
+            return $this->output
+                ->set_status_header(422)
+                ->set_content_type('application/json')
+                ->set_output(json_encode([
+                    'success' => false,
+                    'mensaje' => strip_tags(
+                        validation_errors("\n", "\n")
+                    )
+                ]));
         }
 
-        // Obtenemos los datos enviados
+        // Datos enviados
         $contrasenaActual = $this->input->post('contrasena_actual');
         $nuevaContrasena = $this->input->post('nueva_contrasena');
 
-        // Buscamos el usuario
+        // Buscar usuario
         $usuario = $this->Autenticacion_model->buscarPorId($idUsuario);
 
         if (!$usuario) {
-            redirect('autenticacion');
-            return;
+            return $this->output
+                ->set_status_header(404)
+                ->set_content_type('application/json')
+                ->set_output(json_encode([
+                    'success' => false,
+                    'mensaje' => 'No se encontró el usuario.'
+                ]));
         }
 
-        // Comprobamos que la contraseña actual sea correcta
-        if (!password_verify($contrasenaActual, $usuario->contrasena_hash)) {
-
-            $this->session->set_flashdata('alerta_contrasena', [
-                'icon' => 'error',
-                'title' => 'Contraseña incorrecta',
-                'text' => 'La contraseña actual no es correcta.'
-            ]);
-
-            redirect('alumna/cambiarContrasena');
-            return;
+        // Contraseña actual incorrecta
+        if (
+            !password_verify(
+                $contrasenaActual,
+                $usuario->contrasena_hash
+            )
+        ) {
+            return $this->output
+                ->set_status_header(422)
+                ->set_content_type('application/json')
+                ->set_output(json_encode([
+                    'success' => false,
+                    'mensaje' => 'La contraseña actual no es correcta.'
+                ]));
         }
 
-        // Evitamos usar la misma contraseña actual
-        if (password_verify($nuevaContrasena, $usuario->contrasena_hash)) {
-
-            $this->session->set_flashdata('alerta_contrasena', [
-                'icon' => 'warning',
-                'title' => 'Contraseña no válida',
-                'text' => 'La nueva contraseña no puede ser igual a la actual.'
-            ]);
-
-            redirect('alumna/cambiarContrasena');
-            return;
+        // Nueva contraseña igual a la actual
+        if (
+            password_verify(
+                $nuevaContrasena,
+                $usuario->contrasena_hash
+            )
+        ) {
+            return $this->output
+                ->set_status_header(422)
+                ->set_content_type('application/json')
+                ->set_output(json_encode([
+                    'success' => false,
+                    'mensaje' => 'La nueva contraseña no puede ser igual a la actual.'
+                ]));
         }
 
-        // Generamos el nuevo hash
+        // Generar nuevo hash
         $hash = password_hash(
             $nuevaContrasena,
             PASSWORD_DEFAULT
         );
 
-        // Actualizamos la contraseña
+        // Actualizar contraseña
         $resultado = $this->Alumna_model->cambiarContrasena(
             $idUsuario,
             $hash
         );
 
         if (!$resultado) {
-
-            $this->session->set_flashdata('alerta_contrasena', [
-                'icon' => 'error',
-                'title' => 'Error',
-                'text' => 'No se pudo actualizar la contraseña.'
-            ]);
-
-            redirect('alumna/cambiarContrasena');
-            return;
+            return $this->output
+                ->set_status_header(500)
+                ->set_content_type('application/json')
+                ->set_output(json_encode([
+                    'success' => false,
+                    'mensaje' => 'No se pudo actualizar la contraseña.'
+                ]));
         }
 
-        // Todo salió correctamente
-        $this->session->set_flashdata('alerta_contrasena', [
-            'icon' => 'success',
-            'title' => 'Contraseña actualizada',
-            'text' => 'Tu contraseña fue actualizada correctamente.'
-        ]);
-
-        redirect('alumna/cambiarContrasena');
+        // Respuesta correcta
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode([
+                'success' => true,
+                'mensaje' => 'Tu contraseña fue actualizada correctamente.'
+            ]));
     }
 
     public function cerrarSesion()
