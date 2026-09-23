@@ -27,7 +27,7 @@ class Autenticacion extends CI_Controller
             return;
         }
 
-        $protegerPerfilCompletado = true;
+        $protegerPerfilCompletado = false;
 
         if ($protegerPerfilCompletado) {
 

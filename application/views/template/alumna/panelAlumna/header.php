@@ -39,19 +39,19 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=base_url('index.php/alumna/rutina')?>">
+                        <a class="nav-link" href="<?=base_url('alumna?clases')?>">
                             Mis clases
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=base_url('index.php/alumna/')?>">
+                        <a class="nav-link" href="<?= site_url('alumna?agenda') ?>">
                             Agendar
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=base_url('#perfil')?>">
+                        <a class="nav-link" href="<?= site_url('alumna?perfil') ?>">
                             Perfil
                         </a>
                     </li>
