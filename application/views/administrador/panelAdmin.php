@@ -19,74 +19,22 @@
             <div class="row g-3">
 
                 <div class="col-6">
-                    <div class="schedule-card text-center h-100">
-
-                        <p class="text-white mb-2">
-                            Alumnas<br>Activas
-                        </p>
-
-                        <h1 class="fw-bold text-white mb-3">
-                            25
-                        </h1>
-
-                        <a href="gestionUsers.html" class="btn btn-primary btn-sm px-3">
-                            Ver alumnas
-                        </a>
-
+                    <div class="schedule-card text-center h-100" id="#resumenAlumnas">
                     </div>
                 </div>
 
                 <div class="col-6">
-                    <div class="schedule-card text-center h-100">
-
-                        <p class="text-white mb-2">
-                            Profesores<br>Activos
-                        </p>
-
-                        <h1 class="fw-bold text-white mb-3">
-                            12
-                        </h1>
-
-                        <a href="gestionUsers.html" class="btn btn-primary btn-sm px-3">
-                            Ver profesores
-                        </a>
-
+                    <div class="schedule-card text-center h-100" id="#resumenProfesores">
                     </div>
                 </div>
 
                 <div class="col-6">
-                    <div class="schedule-card text-center h-100">
-
-                        <p class="text-white mb-2">
-                            Clases<br>Hoy
-                        </p>
-
-                        <h1 class="fw-bold text-white mb-3">
-                            8
-                        </h1>
-
-                        <a href="horarios.html" class="btn btn-primary btn-sm px-3">
-                            Ver clases
-                        </a>
-
+                    <div class="schedule-card text-center h-100" id="#resumenClases">
                     </div>
                 </div>
 
                 <div class="col-6">
-                    <div class="schedule-card text-center h-100">
-
-                        <p class="text-white mb-2">
-                            Alertas de<br>Planes
-                        </p>
-
-                        <h1 class="fw-bold text-white mb-3">
-                            3
-                        </h1>
-
-                        <a href="gestionUsers.html" class="btn btn-primary btn-sm px-3">
-                            Ver alertas
-                        </a>
-
+                    <div class="schedule-card text-center h-100" id="#resumenAlertas">
                     </div>
                 </div>
 
@@ -94,60 +42,7 @@
 
         </div>
 
-        <div class="container-fluid mt-5">
-
-            <h2 class="text-center fw-bold text-white mb-4">
-                Próximas Clases
-            </h2>
-
-            <div class="schedule-card mb-3">
-
-                <div class="d-flex justify-content-between align-items-center">
-
-                    <h4 class="fw-bold text-white mb-0">
-                        18:00
-                    </h4>
-
-                    <span class="text-white">
-                        Grupal - Prof. Camila
-                    </span>
-
-                </div>
-
-            </div>
-
-            <div class="schedule-card mb-3">
-
-                <div class="d-flex justify-content-between align-items-center">
-
-                    <h4 class="fw-bold text-white mb-0">
-                        20:00
-                    </h4>
-
-                    <span class="text-white">
-                        Grupal - Prof. Francisca
-                    </span>
-
-                </div>
-
-            </div>
-
-            <div class="schedule-card">
-
-                <div class="d-flex justify-content-between align-items-center">
-
-                    <h4 class="fw-bold text-white mb-0">
-                        21:00
-                    </h4>
-
-                    <span class="text-white">
-                        Grupal - Prof. Florencia
-                    </span>
-
-                </div>
-
-            </div>
-
+        <div class="container-fluid mt-5" id="#proximasClases">
         </div>
 
     </main>
