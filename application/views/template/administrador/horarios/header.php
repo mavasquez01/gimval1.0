@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/bootstrap.min.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/bootstrap-icons.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap_icons/bootstrap-icons.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/temaValk.css') ?>">
     <title>Horarios</title>
 </head>
@@ -13,7 +13,7 @@
 <body>
     <nav class="navbar navbar-expand-lg bg-dark bg-body-tertiary" data-bs-theme="dark">
         <div class="container-fluid">
-            <a href="panelAdmin.html" class="d-flex align-items-center ms-2">
+            <a href="<?= base_url('index.php/administrador') ?>" class="d-flex align-items-center ms-2">
                 <i class="bi bi-chevron-left fs-3 text-white"></i>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"

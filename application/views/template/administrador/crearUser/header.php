@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/bootstrap.min.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/bootstrap-icons.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap_icons/bootstrap-icons.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/temaValk.css') ?>">
     <title>Crear Usuario</title>
 </head>
@@ -13,8 +13,10 @@
 <body>
     <nav class="navbar navbar-expand-lg bg-dark bg-body-tertiary" data-bs-theme="dark">
         <div class="container-fluid">
-            <a class="navbar-brand ms-2" href="#"><img
-                    src="../static/arrow_back_ios_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt=""></a>
+            <a href="<?= base_url('index.php/administrador/gestionUsers') ?>"
+                class="position-absolute start-0 ms-2 text-white text-decoration-none">
+                <i class="bi bi-chevron-left fs-3"></i>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -23,19 +25,20 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?=base_url('index.php/administrador')?>">Inicio</a>
+                        <a class="nav-link active" aria-current="page"
+                            href="<?= base_url('index.php/administrador') ?>">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=base_url('index.php/administrador/horarios')?>">Horarios</a>
+                        <a class="nav-link" href="<?= base_url('index.php/administrador/horarios') ?>">Horarios</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=base_url('index.php/administrador/gestionUser')?>">Alumnas</a>
+                        <a class="nav-link" href="<?= base_url('index.php/administrador/gestionUser') ?>">Alumnas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=base_url('index.php/administrador/gestionUser')?>">Profesores</a>
+                        <a class="nav-link" href="<?= base_url('index.php/administrador/gestionUser') ?>">Profesores</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=base_url('index.php')?>">Cerrar Sesión</a>
+                        <a class="nav-link" href="<?= base_url('index.php') ?>">Cerrar Sesión</a>
                     </li>
                 </ul>
             </div>
