@@ -62,7 +62,8 @@ $hoy = new DateTimeImmutable('today', $zonaHoraria);
                                                             </p>
 
                                                             <p class="text-white mb-0">
-                                                                RUT <?= html_escape($alumna->rut) ?>
+                                                                RUT
+                                                                <?= html_escape($alumna->rut) ?>
                                                             </p>
 
                                                             <?php
@@ -216,14 +217,21 @@ $hoy = new DateTimeImmutable('today', $zonaHoraria);
                                                         <div>
                                                             <p class="text-white mb-1">
                                                                 <?= html_escape(trim(
-                                                                    $profesora->nombre . ' ' .
-                                                                    $profesora->apellido
+                                                                    $profesora->nombre . ' ' . $profesora->apellido
                                                                 )) ?>
                                                             </p>
 
                                                             <p class="text-white mb-0">
                                                                 RUT <?= html_escape($profesora->rut) ?>
                                                             </p>
+
+                                                            <a href="<?= html_escape(
+                                                                site_url('administrador/detalleProfesor')
+                                                                . '?rut=' . rawurlencode($profesora->rut)
+                                                            ) ?>" class="d-inline-block text-white mt-2">
+                                                                Ver perfil
+                                                                <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>

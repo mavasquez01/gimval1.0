@@ -119,5 +119,16 @@ class Administrador_model extends CI_Model
 
         return $resultado && $this->db->affected_rows() === 1;
     }
+
+    public function obtenerDetalleProfesor($rut)
+    {
+        return $this->db
+            ->select('p.rut, p.nombre, p.apellido, p.activo, u.email')
+            ->from('profesor p')
+            ->join('usuario u', 'u.id_usuario = p.id_usuario', 'left')
+            ->where('p.rut', $rut)
+            ->get()
+            ->row();
+    }
 }
 ;

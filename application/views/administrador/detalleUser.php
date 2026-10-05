@@ -1,3 +1,56 @@
+<?php if (isset($profesor)): ?>
+
+    <main class="d-flex justify-content-center py-4 min-vh-100">
+        <div class="container-fluid px-4" style="max-width: 500px;">
+
+            <div class="card">
+                <div class="card-body plan-card p-4">
+
+                    <div class="d-flex align-items-center gap-3">
+                        <i class="bi bi-person-circle display-4 text-white"
+                           aria-hidden="true"></i>
+
+                        <div class="flex-grow-1" style="min-width: 0;">
+                            <h4 class="text-white mb-2">
+                                <?= html_escape(trim(
+                                    $profesor->nombre . ' ' .
+                                    $profesor->apellido
+                                )) ?>
+                            </h4>
+
+                            <p class="text-white mb-1">
+                                RUT: <?= html_escape($profesor->rut) ?>
+                            </p>
+
+                            <p class="text-white text-break mb-3">
+                                <?= html_escape(
+                                    $profesor->email ?? 'Sin correo registrado'
+                                ) ?>
+                            </p>
+
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="text-white">Estado:</span>
+
+                                <?php if ((int) $profesor->activo === 1): ?>
+                                    <span class="badge bg-success">
+                                        Activo
+                                    </span>
+                                <?php else: ?>
+                                    <span class="badge bg-secondary">
+                                        Inactivo
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+<?php else: ?>
 <main class="d-flex justify-content-center py-4 min-vh-100">
 
     <div class="container-fluid px-4" style="max-width: 500px;">
@@ -192,3 +245,4 @@
     </div>
 
 </main>
+<?php endif; ?>

@@ -231,6 +231,36 @@ class Administrador extends CI_Controller
         redirect($destino);
     }
 
+    public function detalleProfesor()
+    {
+        $this->load->database();
+        $this->load->helper('url');
+        $this->load->model('Administrador_model');
+
+        $rut = $this->input->get('rut');
+
+        if (!is_string($rut) || trim($rut) === '') {
+            show_404();
+            return;
+        }
+
+        $profesor = $this->Administrador_model
+            ->obtenerDetalleProfesor(trim($rut));
+
+        if (!$profesor) {
+            show_404();
+            return;
+        }
+
+        $datos = [
+            'profesor' => $profesor
+        ];
+
+        $this->load->view('template/administrador/detalleUser/header', $datos);
+        $this->load->view('administrador/detalleUser', $datos);
+        $this->load->view('template/administrador/detalleUser/footer');
+    }
+
     public function crearUser()
     {
 
