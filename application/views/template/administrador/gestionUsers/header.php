@@ -20,26 +20,8 @@
                 <i class="bi bi-chevron-left fs-3"></i>
             </a>
 
-            <ul class="nav nav-tabs justify-content-center" id="tabs-admin" role="tablist">
-
-                <li class="nav-item me-3 ms-5" role="presentation">
-                    <button class="nav-link <?= $tab === 'alumnas' ? 'active' : '' ?>" id="alumnas-tab"
-                        data-bs-toggle="tab" data-bs-target="#alumnas-tab-pane" type="button" role="tab"
-                        aria-controls="alumnas-tab-pane" aria-selected="<?= $tab === 'alumnas' ? 'true' : 'false' ?>">
-                        Alumnas
-                    </button>
-                </li>
-
-                <li class="nav-item mx-3" role="presentation">
-                    <button class="nav-link <?= $tab === 'profesores' ? 'active' : '' ?>" id="profesores-tab"
-                        data-bs-toggle="tab" data-bs-target="#profesores-tab-pane" type="button" role="tab"
-                        aria-controls="profesores-tab-pane"
-                        aria-selected="<?= $tab === 'profesores' ? 'true' : 'false' ?>">
-                        Profesores
-                    </button>
-                </li>
-
-            </ul>
+            <!-- Los tabs los genera assets/js/gestionUsers.js -->
+            <ul class="nav nav-tabs justify-content-center" id="tabs-admin" role="tablist"></ul>
 
         </div>
 

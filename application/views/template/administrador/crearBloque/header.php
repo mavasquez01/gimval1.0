@@ -1,16 +1,13 @@
-<!DOCTYPE html>
-<html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/bootstrap.min.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/bootstrap-icons.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap_icons/bootstrap-icons.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/temaValk.css') ?>">
 
-    <title>Crear Bloque Horario</title>
+    <title>Editar Bloque Horario</title>
 </head>
 
 <body>
@@ -21,10 +18,9 @@
         <div class="container-fluid">
 
             <a class="navbar-brand ms-2"
-                href="horarios.html">
+                href="<?=base_url('index.php/administrador/horarios')?>">
 
-                <img src="../static/arrow_back_ios_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png"
-                    alt="">
+                <i class="bi bi-chevron-left fs-4"></i>
             </a>
 
             <button class="navbar-toggler"

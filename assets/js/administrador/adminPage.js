@@ -1,241 +1,165 @@
-let prox_clases = [];
-async function cargarDatos(){
-    const contenedor_alumnas = document.getElementById("resumenAlumnas");
-    const contenedor_profesoras = document.getElementById("resumenProfesores");
-    const contenedor_clases = document.getElementById("resumenClases");
-    const contenedor_alertas = document.getElementById("resumenAlertas");
-    const contener_prox = document.getElementById("proximasClases");
+(() => {
+    'use strict';
 
-    try {
-        const response = await fetch(BASE_URL + "admin/resumen_alumnas");
+    // BASE_URL debe estar definida en la vista (ver nota) y apuntar a site_url()
+    const url = (ruta) => BASE_URL.replace(/\/+$/, '') + '/' + ruta;
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+    const porId = (id) => document.getElementById(id);
 
-        const data = await response.json();
+    // Escapa texto que viene del servidor antes de meterlo en innerHTML
+    const esc = (texto) =>
+        String(texto ?? '').replace(/[&<>"']/g, (c) => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+        }[c]));
 
-        if (!data.success) {
-            contenedor_alumnas.innerHTML = `
-                <div class="text-center text-white py-4">
-                    <p>No se pudo cargar el resumen de alumnas.</p>
-                </div>
-            `;
-            return;
-        } else {
-            contenedor_alumnas.innerHTML = `
-                        <p class="text-white mb-2">
-                            Alumnas<br>Activas
-                        </p>
+    // ── Configuración: una entrada = una tarjeta ─────────────────
+    const TARJETAS = [
+        {
+            id: 'resumenAlumnas',
+            campo: 'alumnas_activas',
+            titulo: 'Alumnas<br>Activas',
+            enlace: 'administrador/gestionUsers',
+            boton: 'Ver alumnas',
+        },
+        {
+            id: 'resumenProfesores',
+            campo: 'profesores_activos',
+            titulo: 'Profesores<br>Activos',
+            enlace: 'administrador/gestionUsers?tab=profesores',
+            boton: 'Ver profesores',
+        },
+        {
+            id: 'resumenClases',
+            campo: 'clases_hoy',
+            titulo: 'Clases<br>Hoy',
+            enlace: 'administrador/horarios',
+            boton: 'Ver clases',
+        },
+        {
+            id: 'resumenAlertas',
+            campo: 'alertas_planes',
+            titulo: 'Alertas de<br>Planes',
+            enlace: 'administrador/gestionUsers',
+            boton: 'Ver alertas',
+        },
+    ];
 
-                        <h1 class="fw-bold text-white mb-3" >
-                            ${data}
-                        </h1>
+    // ── Render ───────────────────────────────────────────────────
+    function pintarTarjeta(cfg, valor) {
+        const contenedor = porId(cfg.id);
+        if (!contenedor) return;
 
-                        <a href="${BASE_URL}administrador/gestionUser" class="btn btn-primary btn-sm px-3">
-                            Ver alumnas
-                        </a>
-            `
-        }
-    } catch (error) {
-        console.error("Error al cargar el resumen de alumnas:", error);
+        contenedor.innerHTML = `
+            <p class="text-white mb-2">${cfg.titulo}</p>
+
+            <h1 class="fw-bold text-white mb-3">${Number(valor) || 0}</h1>
+
+            <a href="${esc(url(cfg.enlace))}" class="btn btn-primary btn-sm px-3">
+                ${cfg.boton}
+            </a>
+        `;
+    }
+
+    function pintarErrorTarjeta(cfg) {
+        const contenedor = porId(cfg.id);
+        if (!contenedor) return;
+
         contenedor.innerHTML = `
             <div class="text-center text-white py-4">
-                <p>Error al cargar las alumnas registradas.</p>
+                <p class="mb-0">No se pudo cargar.</p>
             </div>
         `;
     }
 
-    try {
-        const response = await fetch(BASE_URL + "admin/resumen_profesores");
+    function etiquetaFecha(fecha, hoy) {
+        if (fecha === hoy) return 'Hoy';
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (!data.success) {
-            contenedor_profesoras.innerHTML = `
-                <div class="text-center text-white py-4">
-                    <p>No se pudo cargar el resumen de profesores.</p>
-                </div>
-            `;
-            return;
-        } else {
-            contenedor_profesoras.innerHTML = `
-                        <p class="text-white mb-2">
-                            Profesores<br>Activos
-                        </p>
-
-                        <h1 class="fw-bold text-white mb-3">
-                            ${data}
-                        </h1>
-
-                        <a href="${BASE_URL}administrador/gestionUser" class="btn btn-primary btn-sm px-3">
-                            Ver profesores
-                        </a>
-            `
-        }
-    } catch (error) {
-        console.error("Error al cargar el resumen de profesoras:", error);
-        contenedor.innerHTML = `
-            <div class="text-center text-white py-4">
-                <p>Error al cargar las profesoras registradas.</p>
-            </div>
-        `;
+        const [anio, mes, dia] = String(fecha).split('-');
+        return `${dia}/${mes}`;
     }
 
-    try {
-        const response = await fetch(BASE_URL + "admin/resumen_clases");
+    function pintarClases(clases, hoy) {
+        const contenedor = porId('proximasClases');
+        if (!contenedor) return;
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (!data.success) {
-            contenedor_clases.innerHTML = `
-                <div class="text-center text-white py-4">
-                    <p>No se pudo cargar el resumen de clases.</p>
-                </div>
-            `;
-            return;
-        } else {
-            contenedor_clases.innerHTML = `
-                        <p class="text-white mb-2">
-                            Clases<br>Hoy
-                        </p>
-
-                        <h1 class="fw-bold text-white mb-3">
-                            ${data}
-                        </h1>
-
-                        <a href="${BASE_URL}administrador/horarios" class="btn btn-primary btn-sm px-3" >
-                            Ver clases
-                        </a>
-            `
-        }
-    } catch (error) {
-        console.error("Error al cargar el resumen de clases:", error);
-        contenedor.innerHTML = `
-            <div class="text-center text-white py-4">
-                <p>Error al cargar las clases registradas.</p>
-            </div>
-        `;
-    }
-
-    try {
-        const response = await fetch(BASE_URL + "admin/resumen_alertas");
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (!data.success) {
-            contenedor_alertas.innerHTML = `
-                <div class="text-center text-white py-4">
-                    <p>No se pudo cargar el resumen de alertas.</p>
-                </div>
-            `;
-            return;
-        } else {
-            contenedor_alertas.innerHTML = `
-                         <p class="text-white mb-2">
-                            Alertas de<br>Planes
-                        </p>
-
-                        <h1 class="fw-bold text-white mb-3">
-                            ${data}
-                        </h1>
-
-                        <a href="${BASE_URL}administrador/gestionUser?alerta=1" class="btn btn-primary btn-sm px-3">
-                            Ver alertas
-                        </a>
-            `
-        }
-    } catch (error) {
-        console.error("Error al cargar el resumen de clases:", error);
-        contenedor.innerHTML = `
-            <div class="text-center text-white py-4">
-                <p>Error al cargar las clases registradas.</p>
-            </div>
-        `;
-    }
-
-    try {
-        const response = await fetch(BASE_URL + "admin/prox_clases");
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (!data.success) {
-            contener_prox.innerHTML = `
-                <div class="text-center text-white py-4">
-                    <p>No se pudieronc cargar las próximas clases.</p>
-                </div>
-            `;
-            return;
-        } 
-
-        prox_clases = data.clases || [];
-    } catch (error) {
-        console.error("Error al cargar el resumen de clases:", error);
-        contenedor.innerHTML = `
-            <div class="text-center text-white py-4">
-                <p>Error al cargar las clases registradas.</p>
-            </div>
-        `;
-    }
-}
-
-function renderizarClases(clases) {
-    const contenedor = document.getElementById("proximasClases");
-
-    if (!clases || clases.length === 0) {
-        contenedor.innerHTML = `
-            <div class="text-center text-white py-4">
-                <p>No hay clases próximas</p>
-            </div>
-        `;
-        return;
-    }
-
-    const ahora = new Date();
-    let cardsHtml = `<h2 class="text-center fw-bold text-white mb-4">
+        const titulo = `
+            <h2 class="text-center fw-bold text-white mb-4">
                 Próximas Clases
-            </h2>`;
+            </h2>
+        `;
 
-    clases.forEach(function (clase) {
-        cardsHtml += `
+        if (!clases || clases.length === 0) {
+            contenedor.innerHTML = titulo + `
+                <div class="text-center text-white py-4">
+                    <p>No hay clases próximas</p>
+                </div>
+            `;
+            return;
+        }
+
+        contenedor.innerHTML = titulo + clases.map((clase) => `
             <div class="schedule-card mb-3">
-
                 <div class="d-flex justify-content-between align-items-center">
 
-                    <h4 class="fw-bold text-white mb-0">
-                        ${clase.hora_inicio}
-                    </h4>
+                    <div>
+                        <h4 class="fw-bold text-white mb-0">
+                            ${esc(String(clase.hora_inicio).slice(0, 5))}
+                        </h4>
+                        <small class="text-white">
+                            ${esc(etiquetaFecha(clase.fecha, hoy))}
+                        </small>
+                    </div>
 
                     <span class="text-white">
-                        Grupal - ${clase.nombre_profesor}
+                        Grupal - ${esc(clase.nombre_profesor ?? 'Sin profesor')}
                     </span>
 
                 </div>
+            </div>
+        `).join('');
+    }
 
+    function pintarErrorClases() {
+        const contenedor = porId('proximasClases');
+        if (!contenedor) return;
+
+        contenedor.innerHTML = `
+            <div class="text-center text-white py-4">
+                <p>No se pudieron cargar las próximas clases.</p>
             </div>
         `;
-    });
+    }
 
-    contenedor.innerHTML = cardsHtml;
-}
+    // ── Carga: una sola petición para todo el panel ──────────────
+    async function cargarPanel() {
+        try {
+            const respuesta = await fetch(url('administrador/resumenPanel'), {
+                headers: { Accept: 'application/json' },
+                credentials: 'same-origin',
+            });
 
-document.addEventListener("DOMContentLoaded", function () {
-    cargarDatos();
-    renderizarClases(prox_clases);
-});
+            if (!respuesta.ok) {
+                throw new Error(`HTTP ${respuesta.status}`);
+            }
+
+            const data = await respuesta.json();
+
+            if (!data.success) {
+                throw new Error('El servidor respondió sin éxito');
+            }
+
+            TARJETAS.forEach((cfg) => pintarTarjeta(cfg, data[cfg.campo]));
+            pintarClases(data.proximas_clases, data.hoy);
+        } catch (error) {
+            console.error('Error al cargar el panel:', error);
+            TARJETAS.forEach(pintarErrorTarjeta);
+            pintarErrorClases();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarPanel);
+})();
